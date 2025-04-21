@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -26,6 +27,8 @@ public class PlayerMove : MonoBehaviour
 
     [Header("# Components")]
     private CharacterController _characterController;
+
+    public Action OnStaminaChange;
 
     private void Awake()
     {
@@ -64,6 +67,8 @@ public class PlayerMove : MonoBehaviour
 
     private void UpdateStamina()
     {
+        float curStamina = _stamina;
+
         if(_isSprinting || _canClimb)
         {
             _stamina = Mathf.Max(0, _stamina - _playerStat.SprintStanmina * Time.deltaTime);
@@ -71,6 +76,11 @@ public class PlayerMove : MonoBehaviour
         else
         {
             _stamina = Mathf.Min(_playerStat.MaxStamina, _stamina + 5 * Time.deltaTime);
+        }
+
+        if(curStamina != _stamina)
+        {
+            OnStaminaChange?.Invoke();
         }
     }
 

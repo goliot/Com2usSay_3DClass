@@ -1,17 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_StaminaSlider : MonoBehaviour
+public class UIController : MonoBehaviour
 {
     public PlayerMove PlayerMove;
-    private Slider _slider;
+    [SerializeField] private Slider _slider;
 
     private void Awake()
     {
-        _slider = GetComponent<Slider>();
+        PlayerMove.OnStaminaChange += UpdateStaminaSlider;
     }
 
-    void Update()
+    public void UpdateStaminaSlider()
     {
         _slider.value = PlayerMove.Stamina / PlayerMove.PlayerStat.MaxStamina;
     }
