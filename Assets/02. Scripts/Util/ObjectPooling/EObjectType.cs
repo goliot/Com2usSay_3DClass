@@ -1,7 +1,8 @@
 public enum EObjectType
 {
-    Bomb,
-    BombEffect,
+    Granade,
+    GranadeExplodeEffect,
     BulletFireEffect,
-    BulletImpact,
+    BulletImpactEffect,
+    Count,
 }
