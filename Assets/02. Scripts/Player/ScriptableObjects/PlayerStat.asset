@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStat
   m_EditorClassIdentifier: 
   MaxStamina: 100
+  StaminaRegen: 5
   WalkSpeed: 7
   SprintSpeed: 12
   SprintStanmina: 10
@@ -20,4 +21,4 @@ MonoBehaviour:
   RollSpeed: 50
   RollDuration: 0.2
   RollStamina: 30
-  ClimbSpeed: 1
+  ClimbSpeed: 7

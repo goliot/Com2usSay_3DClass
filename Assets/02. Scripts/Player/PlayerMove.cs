@@ -1,62 +1,59 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UniRx;
 
 public class PlayerMove : MonoBehaviour
 {
     private const float GRAVITY = -9.8f; //중력
     private float _yVelocity = 0f;       //중력 가속도
 
-    [SerializeField] private float _speed;
-    [SerializeField] private float _stamina;
-    public float Stamina => _stamina;
-
-    [Header("# Move Stats")]
-    [SerializeField] private PlayerStatSO _playerStat;
-    public PlayerStatSO PlayerStat => _playerStat;
-
-    [Header("# Climbing")]
-    private bool _canClimb;
-
-    [Header("# States")]
-    private float _h;
-    private float _v;
-    private bool _canDoubleJump = true;
-    private bool _isSprinting = false;
-    private Coroutine _rollCoroutine = null;
-
     [Header("# Components")]
     private CharacterController _characterController;
+    [SerializeField] private PlayerStatSO _playerStat;
 
-    public Action OnStaminaChange;
+    [Header("# States")]
+    private EPlayerState _currentState;
+    private float _h;
+    private float _v;
+    private int _jumpCount = 0;
+    private float _currentSpeed;
+    private float _currentStamina;
+
+    [Header("# Climbing")]
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private float wallCheckDistance = 1f;
+    private bool _isClimbingWall = false;
+
+    public float Stamina => _currentStamina;
+    public PlayerStatSO PlayerStat => _playerStat;
+    public Action<float> OnStaminaChange;
 
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _speed = _playerStat.WalkSpeed;
-        _stamina = _playerStat.MaxStamina;
+        _currentState = EPlayerState.Idle;
+        _currentSpeed = _playerStat.WalkSpeed;
+        _currentStamina = _playerStat.MaxStamina;
+    }
+
+    private void Start()
+    {
+        this.ObserveEveryValueChanged(_ => Mathf.Round(_currentStamina * 100f) / 100f)
+            .DistinctUntilChanged()
+            .Subscribe(newStamina =>
+            {
+                OnStaminaChange?.Invoke(newStamina);
+            }).AddTo(this);
     }
 
     void Update()
     {
         GetInput();
-        WallCheck();
+        UpdateState();
         Move();
-        Sprint();
-        Jump();
-        Roll();
         UpdateStamina();
-    }
-
-    //private void WallCheck()
-    //{
-    //    _canClimb = Physics.SphereCast(transform.position, _sphereCastRadius, transform.forward, out frontWallHit, _detectionLength, _wallLayer);
-    //    _wallLookAngle = Vector3.Angle(transform.forward, -frontWallHit.normal);
-    //}
-
-    private void WallCheck()
-    {
-        _canClimb = _characterController.collisionFlags == CollisionFlags.Sides;
+        Debug.Log(_currentState);
     }
 
     private void GetInput()
@@ -65,102 +62,125 @@ public class PlayerMove : MonoBehaviour
         _v = Input.GetAxisRaw("Vertical");
     }
 
-    private void UpdateStamina()
+    private bool CheckWallInFront()
     {
-        float curStamina = _stamina;
+        Vector3 origin = transform.position + Vector3.down;
+        Vector3 direction = transform.forward; // 정면 기준
 
-        if(_isSprinting || _canClimb)
+        return Physics.Raycast(origin, direction, wallCheckDistance, wallLayer);
+    }
+
+    private void UpdateState()
+    {
+        // 벽타기 감지
+        if (CheckWallInFront() && Input.GetAxisRaw("Vertical") != 0)
         {
-            _stamina = Mathf.Max(0, _stamina - _playerStat.SprintStanmina * Time.deltaTime);
+            _currentState = EPlayerState.Climbing;
+            _currentSpeed = _playerStat.ClimbSpeed;
+            _isClimbingWall = true;
         }
-        else
+        else if ((_isClimbingWall && !CheckWallInFront()))
         {
-            _stamina = Mathf.Min(_playerStat.MaxStamina, _stamina + 5 * Time.deltaTime);
+            _currentState = EPlayerState.Idle;
+            _currentSpeed = _playerStat.WalkSpeed;
+            _isClimbingWall = false;
         }
 
-        if(curStamina != _stamina)
+        // 달리기
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _currentStamina > 0)
         {
-            OnStaminaChange?.Invoke();
+            _currentState = EPlayerState.Sprinting;
+            _currentSpeed = _playerStat.SprintSpeed;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _currentState = EPlayerState.Idle;
+            _currentSpeed = _playerStat.WalkSpeed;
+        }
+        // 구르기
+        else if (Input.GetKeyDown(KeyCode.E) && _currentStamina >= _playerStat.RollStamina)
+        {
+            _currentState = EPlayerState.Rolling;
+            _currentSpeed = _playerStat.RollSpeed;
+            _currentStamina -= _playerStat.RollStamina;
+            StartCoroutine(CoRoll());
+        }
+        // 점프
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_characterController.isGrounded || _jumpCount < 2)
+            {
+                _currentState = EPlayerState.Idle;
+                _yVelocity = _playerStat.JumpPower;
+                _jumpCount++;
+            }
         }
     }
 
+
     private void Move()
     {
-        Vector3 direction = new Vector3(_h, 0, _v).normalized;
+        Vector3 direction;
 
-        //메인 카메라 기준 방향 변환
+        if (_currentState == EPlayerState.Climbing)
+        {
+            // 위/아래 방향 입력으로만 이동
+            direction = new Vector3(_h, _v, 0);
+            _characterController.Move(direction * _currentSpeed * Time.deltaTime);
+            return;
+        }
+
+        direction = new Vector3(_h, 0, _v).normalized;
         direction = Camera.main.transform.TransformDirection(direction);
 
-        if (_canClimb)
+        if (_currentState == EPlayerState.Climbing)
         {
-            _yVelocity = _playerStat.ClimbSpeed;
+            _yVelocity = 0f; // 벽 타는 중엔 중력 제거
+        }
+        else if (_characterController.isGrounded)
+        {
+            if (_yVelocity < 0)
+            {
+                _jumpCount = 0;
+            }
+            _yVelocity = 0f;
         }
         else
         {
             _yVelocity += GRAVITY * Time.deltaTime;
         }
+
         direction.y = _yVelocity;
-
-        _characterController.Move(direction * _speed * Time.deltaTime);
+        _characterController.Move(direction * _currentSpeed * Time.deltaTime);
     }
 
-    private void Sprint()
+    private void UpdateStamina()
     {
-        if(Input.GetKeyDown(KeyCode.LeftShift) && _stamina > 0)
+        if (_currentState == EPlayerState.Sprinting)
         {
-            _isSprinting = true;
-            _speed = _playerStat.SprintSpeed;
+            _currentStamina = Mathf.Max(0, _currentStamina - _playerStat.SprintStanmina * Time.deltaTime);
         }
-        if(Input.GetKeyUp(KeyCode.LeftShift))
+        else
         {
-            _isSprinting = false;
-            _speed = _playerStat.WalkSpeed;
+            _currentStamina = Mathf.Min(_playerStat.MaxStamina, _currentStamina + _playerStat.StaminaRegen * Time.deltaTime);
         }
     }
 
-    private void Jump()
-    {
-        if (_characterController.isGrounded)
-        {
-            _canDoubleJump = true;
-        }
-
-        if (Input.GetButtonDown("Jump") && (_characterController.isGrounded || _canDoubleJump))
-        {
-            _yVelocity = _playerStat.JumpPower;
-
-            // 땅이 아니었다면 더블 점프 소모
-            if (!_characterController.isGrounded)
-            {
-                _canDoubleJump = false;
-            }
-        }
-    }
-
-    private void Roll()
-    {
-        if (!_characterController.isGrounded)
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.E) && _rollCoroutine == null && _stamina >= _playerStat.RollStamina)
-        {
-            _stamina -= _playerStat.RollStamina;
-            _speed = _playerStat.RollSpeed;
-            _rollCoroutine = StartCoroutine(CoRoll());
-        }
-    }
-    
-    IEnumerator CoRoll()
+    private IEnumerator CoRoll()
     {
         float timer = 0f;
-        while(timer < _playerStat.RollDuration)
+        while (timer < _playerStat.RollDuration)
         {
             timer += Time.deltaTime;
             yield return null;
         }
-        _speed = _isSprinting ? _playerStat.SprintSpeed : _playerStat.WalkSpeed;
-        _rollCoroutine = null;
+        _currentState = EPlayerState.Idle;
+        _currentSpeed = _playerStat.WalkSpeed;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position + Vector3.down, transform.forward * wallCheckDistance);
     }
 }

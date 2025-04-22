@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerStatSO : ScriptableObject
 {
     public float MaxStamina;
+    public float StaminaRegen;
 
     [Header("# Move Stats")]
     public float WalkSpeed;
