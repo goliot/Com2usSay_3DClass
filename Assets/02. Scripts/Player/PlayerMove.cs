@@ -27,7 +27,7 @@ public class PlayerMove : MonoBehaviour
 
     public float Stamina => _currentStamina;
     public PlayerStatSO PlayerStat => _playerStat;
-    public Action<float> OnStaminaChange;
+    public static Action<float, float> OnStaminaChange;
 
     private void Awake()
     {
@@ -43,7 +43,7 @@ public class PlayerMove : MonoBehaviour
             .DistinctUntilChanged()
             .Subscribe(newStamina =>
             {
-                OnStaminaChange?.Invoke(newStamina);
+                OnStaminaChange?.Invoke(newStamina, _playerStat.MaxStamina);
             }).AddTo(this);
     }
 
@@ -73,13 +73,13 @@ public class PlayerMove : MonoBehaviour
     private void UpdateState()
     {
         // 벽타기 감지
-        if (CheckWallInFront() && Input.GetAxisRaw("Vertical") != 0)
+        if (CheckWallInFront() && Input.GetAxisRaw("Vertical") != 0 && _currentStamina > 0)
         {
             _currentState = EPlayerState.Climbing;
             _currentSpeed = _playerStat.ClimbSpeed;
             _isClimbingWall = true;
         }
-        else if ((_isClimbingWall && !CheckWallInFront()))
+        else if ((_isClimbingWall && !CheckWallInFront()) || _currentStamina <= 0)
         {
             _currentState = EPlayerState.Idle;
             _currentSpeed = _playerStat.WalkSpeed;
@@ -159,6 +159,10 @@ public class PlayerMove : MonoBehaviour
         if (_currentState == EPlayerState.Sprinting)
         {
             _currentStamina = Mathf.Max(0, _currentStamina - _playerStat.SprintStanmina * Time.deltaTime);
+        }
+        else if(_currentState == EPlayerState.Climbing && (_h != 0 || _v != 0))
+        {
+            _currentStamina = Mathf.Max(0, _currentStamina - _playerStat.ClimbingStamina * Time.deltaTime);
         }
         else
         {
