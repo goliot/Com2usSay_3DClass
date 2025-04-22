@@ -629,7 +629,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slider: {fileID: 1278355521}
-  PlayerMove: {fileID: 594617495}
 --- !u!1 &594332643
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,6 +718,7 @@ GameObject:
   - component: {fileID: 594617496}
   - component: {fileID: 594617494}
   - component: {fileID: 594617495}
+  - component: {fileID: 594617497}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -816,7 +816,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 594617489}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 316197993c144044eb1b760f64c3db74, type: 3}
   m_Name: 
@@ -851,6 +851,23 @@ CharacterController:
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &594617497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594617489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74132a3efcf52da4aa363de1797bcfba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerStat: {fileID: 11400000, guid: 9837438651ad1e94492a82f8b48e4fb7, type: 2}
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _wallCheckDistance: 0.6
 --- !u!1 &596970030
 GameObject:
   m_ObjectHideFlags: 0
