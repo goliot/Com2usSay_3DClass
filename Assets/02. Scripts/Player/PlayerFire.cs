@@ -12,14 +12,13 @@ public class PlayerFire : MonoBehaviour
     [SerializeField] private Transform _firePosition;
     [SerializeField] private EObjectType _bombType;
 
-    [SerializeField] private float _throwPower = 15f;
-
     private Camera _mainCamera;
 
     [Header("# Events")]
     public static Action<int, int> OnAmmoChanged;
     public static Action<int, int> OnGrandeNumberChanged;
     public static Action<float, float> OnReload;
+    public static Action<float, float> OnGranadeCharge;
 
     [Header("# Current Ammo Infos")]
     private int _currentAmmo;
@@ -101,13 +100,9 @@ public class PlayerFire : MonoBehaviour
                 OnReload?.Invoke(_weaponDatas.GetWeapon(EWeaponType.BasicGun).ReloadInterval, _weaponDatas.GetWeapon(EWeaponType.BasicGun).ReloadInterval);
                 _coReload = null;
             }
-            //레이저를 생성하고 발사 위치와 진행 방향을 설정
             Ray ray = new Ray(_firePosition.position, _mainCamera.transform.forward);
-
-            //레이저와 부딪힌 물체의 정보를 저장할 변수
             RaycastHit hitInfo = new RaycastHit();
 
-            //레이저를 발사한 다음, 변수에 데이터가 있다면 피격 이펙트 생성
             if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player"))))
             {
                 GameObject bulletImpact = PoolManager.Instance.GetObject(EObjectType.BulletImpactEffect);
@@ -118,9 +113,6 @@ public class PlayerFire : MonoBehaviour
             _currentAmmo--;
             _timer = 0f;
         }
-        //Ray: 레이저
-        //RayCast: 레이저 발사
-        //RayCastHit : 레이저 충돌시 정보 저장 구조체
     }
 
     private void StartCharging()
@@ -136,6 +128,7 @@ public class PlayerFire : MonoBehaviour
 
         _chargePower += _chargeSpeed * Time.deltaTime;
         _chargePower = Mathf.Min(_chargePower, _maxChargePower);
+        OnGranadeCharge?.Invoke(_chargePower, _maxChargePower);
     }
 
     private void ThrowGranade()
@@ -149,6 +142,7 @@ public class PlayerFire : MonoBehaviour
         granadeRigidbody.AddForce(_mainCamera.transform.forward * _chargePower, ForceMode.Impulse);
         granadeRigidbody.AddTorque(Vector3.one * 10f);
 
+        OnGranadeCharge?.Invoke(0, _maxChargePower);
         _currentGranade--;
         _isCharging = false;
     }
@@ -166,22 +160,6 @@ public class PlayerFire : MonoBehaviour
         int maxAmmo = _weaponDatas.GetWeapon(EWeaponType.BasicGun).MaxAmmo;
         float totalDuration = _weaponDatas.GetWeapon(EWeaponType.BasicGun).ReloadInterval;
         float timer = 0f;
-        //int ammoToReload = maxAmmo - _currentAmmo;
-
-        //if (ammoToReload <= 0)
-        //{
-        //    _coReload = null;
-        //    yield break;
-        //}
-
-        //float interval = totalDuration / ammoToReload;
-
-        //while (_currentAmmo < maxAmmo)
-        //{
-        //    _currentAmmo++;
-
-        //    yield return new WaitForSeconds(interval);
-        //}
 
         while(timer < totalDuration)
         {
