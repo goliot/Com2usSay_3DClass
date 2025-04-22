@@ -11,6 +11,8 @@ public class PlayerFire : MonoBehaviour
 
     [SerializeField] private Transform _firePosition;
     [SerializeField] private EObjectType _bombType;
+    [SerializeField] private TrailRenderer _bulletTrail;
+    [SerializeField] private GameObject _muzzleFlash;
 
     private Camera _mainCamera;
 
@@ -94,26 +96,66 @@ public class PlayerFire : MonoBehaviour
     {
         if (_weaponDatas.GetWeapon(EWeaponType.BasicGun).CoolTime < _timer && _currentAmmo > 0)
         {
-            if(_coReload != null)
+            if (_coReload != null)
             {
                 StopCoroutine(_coReload);
                 OnReload?.Invoke(_weaponDatas.GetWeapon(EWeaponType.BasicGun).ReloadInterval, _weaponDatas.GetWeapon(EWeaponType.BasicGun).ReloadInterval);
                 _coReload = null;
             }
-            Ray ray = new Ray(_firePosition.position, _mainCamera.transform.forward);
-            RaycastHit hitInfo = new RaycastHit();
+            _muzzleFlash.SetActive(true);
 
-            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player"))))
+            GameObject tracerBullet = PoolManager.Instance.GetObject(EObjectType.TracerBullet);
+            tracerBullet.SetActive(false);
+            tracerBullet.transform.position = _firePosition.transform.position;
+            tracerBullet.transform.rotation = Quaternion.identity;
+            tracerBullet.SetActive(true);
+
+            Ray ray = new Ray(_firePosition.position, _mainCamera.transform.forward);
+            RaycastHit hitInfo;
+
+            Vector3 hitPoint;
+            bool isHit = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player")));
+            if (isHit)
             {
-                GameObject bulletImpact = PoolManager.Instance.GetObject(EObjectType.BulletImpactEffect);
-                bulletImpact.transform.position = hitInfo.point;
-                bulletImpact.transform.forward = hitInfo.normal; // 법선 벡터(수직 벡터)
+                hitPoint = hitInfo.point;
             }
+            else
+            {
+                // 맞지 않았을 경우 일정 거리 앞으로
+                hitPoint = ray.origin + ray.direction * 50f; // 50f는 트레일 길이
+            }
+
+            StartCoroutine(CoSpawnTrail(tracerBullet.GetComponent<TrailRenderer>(), hitPoint, isHit ? (Vector3?)hitInfo.normal : null));
 
             _currentAmmo--;
             _timer = 0f;
         }
     }
+
+    private IEnumerator CoSpawnTrail(TrailRenderer trail, Vector3 targetPoint, Vector3? normal)
+    {
+        float time = 0;
+        Vector3 startPosition = trail.transform.position;
+        while (time < 1)
+        {
+            trail.transform.position = Vector3.Lerp(startPosition, targetPoint, time);
+            time += Time.deltaTime / trail.time;
+            yield return null;
+        }
+
+        trail.transform.position = targetPoint;
+
+        if (normal.HasValue)
+        {
+            GameObject impact = PoolManager.Instance.GetObject(EObjectType.BulletImpactEffect);
+            impact.transform.position = targetPoint;
+            impact.transform.rotation = Quaternion.LookRotation(normal.Value);
+        }
+
+        yield return new WaitForSeconds(trail.time);
+        PoolManager.Instance.ReturnObject(trail.gameObject, EObjectType.TracerBullet);
+    }
+
 
     private void StartCharging()
     {

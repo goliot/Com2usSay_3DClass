@@ -4,5 +4,6 @@ public enum EObjectType
     GranadeExplodeEffect,
     BulletFireEffect,
     BulletImpactEffect,
+    TracerBullet,
     Count,
 }
