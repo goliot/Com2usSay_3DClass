@@ -15,14 +15,24 @@ public class AttackState : IEnemyState
 
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) >= enemy.Stat.AttackDistance)
         {
-            enemy.ChangeState(enemy.TraceState);
+            enemy.StateMachine.ChangeState(enemy.TraceState);
             return;
         }
 
         if (_timer >= enemy.Stat.AttackCoolTime)
         {
-            Debug.Log("공격!");
+            PerformAttack();
             _timer = 0f;
         }
+    }
+
+    private void PerformAttack()
+    {
+        Debug.Log("공격!");
+    }
+
+    void IEnemyState.Exit(Enemy enemy)
+    {
+
     }
 }

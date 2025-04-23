@@ -17,4 +17,8 @@ public class DieState : IEnemyState
             enemy.Die();
         }
     }
+    void IEnemyState.Exit(Enemy enemy)
+    {
+
+    }
 }

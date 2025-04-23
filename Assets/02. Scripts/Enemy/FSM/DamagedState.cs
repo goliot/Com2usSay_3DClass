@@ -11,9 +11,15 @@ public class DamagedState : IEnemyState
 
     void IEnemyState.Execute(Enemy enemy)
     {
+        _damagedTimer += Time.deltaTime;
+
         if(_damagedTimer >= enemy.Stat.DamagedTime)
         {
-            enemy.ChangeState(enemy.TraceState);
+            enemy.StateMachine.ChangeState(enemy.TraceState);
         }
+    }
+    void IEnemyState.Exit(Enemy enemy)
+    {
+
     }
 }

@@ -18,10 +18,15 @@ public class Enemy : MonoBehaviour
 
     public GameObject Player { get; private set; }
     public Vector3 StartPosition { get; private set; }
-    public float YVelocity { get; private set; }
+    public float YVelocity { get; set; }
+
+
+    [Header("# StateMachine")]
+    public EnemyStateMachine StateMachine { get; private set; }
 
     private void Awake()
     {
+        StateMachine = new EnemyStateMachine(this, _idleState);
         CharacterController = GetComponent<CharacterController>();
         StartPosition = transform.position;
         Stat = EnemyStats.GetData(_type);
@@ -30,7 +35,6 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        _currentState = IdleState;
         _health = Stat.MaxHealth;
     }
 
@@ -38,29 +42,29 @@ public class Enemy : MonoBehaviour
     {
         Player = GameObject.FindGameObjectWithTag("Player");
     }
-    
-    #region FSM
-    private IEnemyState _currentState;
 
-    [Header("# State Classes")]
-    public IdleState IdleState { get; private set; } = new IdleState();
-    public TraceState TraceState { get; private set; } = new TraceState();
-    public AttackState AttackState { get; private set; } = new AttackState();
-    public ReturnState ReturnState { get; private set; } = new ReturnState();
-    public DamagedState DamagedState { get; private set; } = new DamagedState();
-    public DieState DieState { get; private set; } = new DieState();
+    #region States
+    protected virtual IEnemyState _idleState => new IdleState();
+    protected virtual IEnemyState _traceState => new TraceState();
+    protected virtual IEnemyState _attackState => new AttackState();
+    protected virtual IEnemyState _returnState => new ReturnState();
+    protected virtual IEnemyState _damagedState => new DamagedState();
+    protected virtual IEnemyState _dieState => new DieState();
+    protected virtual IEnemyState _patrolState => new PatrolState();
 
-    public void ChangeState(IEnemyState newState)
-    {
-        Debug.Log($"{_currentState} -> {newState}");
-        _currentState = newState;
-        _currentState.Enter(this);
-    }
+    public virtual IEnemyState IdleState => _idleState;
+    public virtual IEnemyState TraceState => _traceState;
+    public virtual IEnemyState AttackState => _attackState;
+    public virtual IEnemyState ReturnState => _returnState;
+    public virtual IEnemyState DamagedState => _damagedState;
+    public virtual IEnemyState DieState => _dieState;
+    public virtual IEnemyState PatrolState => _patrolState;
+    #endregion
 
     private void Update()
     {
         ApplyGravity();
-        _currentState?.Execute(this);
+        StateMachine.Update();
     }
 
     private void ApplyGravity()
@@ -70,7 +74,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(DamageInfo damage)
     {
-        if (_currentState == DieState)
+        if (StateMachine.CurrentState.GetType() == typeof(DieState))
         {
             return;
         }
@@ -81,11 +85,11 @@ public class Enemy : MonoBehaviour
         if (_health <= 0)
         {
             Debug.Log("상태 전환: Damaged -> Die");
-            ChangeState(DieState);
+            StateMachine.ChangeState(DieState);
         }
         else
         {
-            ChangeState(DamagedState);
+            StateMachine.ChangeState(DamagedState);
         }
     }
 
@@ -93,5 +97,4 @@ public class Enemy : MonoBehaviour
     {
         Destroy(gameObject);
     }
-    #endregion
 }

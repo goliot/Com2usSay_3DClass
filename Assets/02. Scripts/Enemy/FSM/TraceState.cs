@@ -11,17 +11,21 @@ public class TraceState : IEnemyState
     {
         if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
         {
-            enemy.ChangeState(enemy.AttackState);
+            enemy.StateMachine.ChangeState(enemy.AttackState);
             return;
         }
         if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) >= enemy.Stat.FindDistance)
         {
-            enemy.ChangeState(enemy.ReturnState);
+            enemy.StateMachine.ChangeState(enemy.ReturnState);
             return;
         }
 
         Vector3 direction = (enemy.Player.transform.position - enemy.transform.position).normalized;
         direction.y = enemy.YVelocity;
         enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
+    }
+    void IEnemyState.Exit(Enemy enemy)
+    {
+
     }
 }

@@ -10,8 +10,12 @@ public class IdleState : IEnemyState
     {
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) < enemy.Stat.FindDistance)
         {
-            enemy.ChangeState(enemy.TraceState);
+            enemy.StateMachine.ChangeState(enemy.TraceState);
             return;
         }
+    }
+    void IEnemyState.Exit(Enemy enemy)
+    {
+
     }
 }
