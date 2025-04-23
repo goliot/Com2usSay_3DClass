@@ -72,7 +72,7 @@ public class PlayerFire : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Gun();
+            FireGun();
         }
         else if (Input.GetMouseButtonDown(1))
         {
@@ -92,7 +92,7 @@ public class PlayerFire : MonoBehaviour
         }
     }
 
-    private void Gun()
+    private void FireGun()
     {
         if (_weaponDatas.GetWeapon(EWeaponType.BasicGun).CoolTime < _timer && _currentAmmo > 0)
         {
@@ -110,7 +110,7 @@ public class PlayerFire : MonoBehaviour
             tracerBullet.transform.rotation = Quaternion.identity;
             tracerBullet.SetActive(true);
 
-            Ray ray = new Ray(_firePosition.position, _mainCamera.transform.forward);
+            Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
             RaycastHit hitInfo;
 
             Vector3 hitPoint;
@@ -212,5 +212,13 @@ public class PlayerFire : MonoBehaviour
         _currentAmmo = maxAmmo;
 
         _coReload = null;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_firePosition == null || _mainCamera == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(_firePosition.position, _mainCamera.transform.forward * 100f);
     }
 }

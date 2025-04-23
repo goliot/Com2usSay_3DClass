@@ -3,22 +3,54 @@ using UnityEngine.InputSystem;
 
 public class CameraRotate : MonoBehaviour
 {
-    [SerializeField]
-    private float _rotationSpeed = 150f;
+    [SerializeField] private Transform _playerBody; // TPS 회전을 위해 필요
+    [SerializeField] private float _rotationSpeed = 150f;
+    [SerializeField] private float _tpsDistance = 3f;
 
-    //오일러 각도는 0~360도 -> 0에서 시작한다고 기준을 세운다.
     private float _rotationX = 0f;
     private float _rotationY = 0f;
 
     private void Update()
     {
-        //1. 마우스 입력을 받는다.(커서의 움직임 방향)
-        //2. 마우스 입력으로부터 회전시킬 방향을 만든다.
-        _rotationX += Input.GetAxis("Mouse X") * _rotationSpeed * Time.deltaTime;
-        _rotationY -= Input.GetAxis("Mouse Y") * _rotationSpeed * Time.deltaTime;
-        _rotationY = Mathf.Clamp(_rotationY, -90f, 90f);
+        float mouseX = Input.GetAxis("Mouse X") * _rotationSpeed * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * _rotationSpeed * Time.deltaTime;
 
-        //3. 카메라를 그 방향으로 회전시킨다.
-        transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0);
+        switch (CameraManager.Instance.CurrentView)
+        {
+            case CameraManager.ViewMode.FPS:
+                HandleFPSRotation(mouseX, mouseY);
+                break;
+
+            case CameraManager.ViewMode.TPS:
+                HandleTPSRotation(mouseX, mouseY);
+                break;
+
+            case CameraManager.ViewMode.Quarter:
+                HandleQuarterViewRotation(mouseX);
+                break;
+        }
+    }
+
+    private void HandleFPSRotation(float mouseX, float mouseY)
+    {
+        _rotationX += mouseX;
+        _rotationY -= mouseY;
+        _rotationY = Mathf.Clamp(_rotationY, -90f, 90f);
+        transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
+    }
+
+    private void HandleTPSRotation(float mouseX, float mouseY)
+    {
+        _rotationX += mouseX;
+        _rotationY -= mouseY;
+        _rotationY = Mathf.Clamp(_rotationY, -45f, 45f);
+
+        // 카메라 자체를 회전시키는 게 아니라, "타겟(뷰)"의 회전을 바꾼다
+        transform.localRotation = Quaternion.Euler(_rotationY, _rotationX, 0);
+    }
+
+    private void HandleQuarterViewRotation(float mouseX)
+    {
+        transform.eulerAngles = new Vector3(45, 0, 0); // 수평 회전만 적용
     }
 }
