@@ -96,14 +96,11 @@ public class Enemy : MonoBehaviour
     
     private void KnockBack(float amount, GameObject from)
     {
-        // 넉백 방향 계산 (예시: 충돌한 적의 위치에서 현재 위치를 빼서 넉백 방향을 계산)
         Vector3 knockbackDirection = transform.position - from.transform.position;  // _lastHitPosition은 마지막으로 공격 받은 지점
-        knockbackDirection.y = 0; // y축을 0으로 고정하여 수평으로만 밀림
+        knockbackDirection.y = 0; 
 
-        // 넉백 방향을 정규화
         knockbackDirection.Normalize();
 
-        // 넉백 강도만큼 캐릭터를 밀어냄
         CharacterController.Move(knockbackDirection * amount);
     }
 
