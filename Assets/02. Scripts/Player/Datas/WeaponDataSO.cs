@@ -9,11 +9,12 @@ public class WeaponDataSO : ScriptableObject
 
     private Dictionary<EWeaponType, WeaponData> _weaponDict;
 
-    public void Init()
+    public void Init(GameObject owner)
     {
         _weaponDict = new Dictionary<EWeaponType, WeaponData>();
         foreach (var data in WeaponDatas)
         {
+            data.Damage.From = owner;
             if (!_weaponDict.ContainsKey(data.WeaponType))
                 _weaponDict.Add(data.WeaponType, data);
         }
@@ -21,9 +22,6 @@ public class WeaponDataSO : ScriptableObject
 
     public WeaponData GetWeapon(EWeaponType type)
     {
-        if (_weaponDict == null)
-            Init();
-
         if (_weaponDict.TryGetValue(type, out var data))
             return data;
 

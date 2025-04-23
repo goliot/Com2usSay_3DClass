@@ -38,6 +38,7 @@ public class PlayerFire : MonoBehaviour
     private void Awake()
     {
         _mainCamera = Camera.main;
+        _weaponDatas.Init(gameObject);
 
         this.ObserveEveryValueChanged(_ => _currentAmmo)
             .DistinctUntilChanged()
