@@ -1,9 +1,16 @@
+using UnityEngine;
+
 [System.Serializable]
 public class WeaponData
 {
     public EWeaponType WeaponType;
-    public float Damage;
+    public DamageInfo Damage;
     public float CoolTime;
     public int MaxAmmo;
     public int ReloadInterval;
+
+    void Init()
+    {
+        Damage.From = GameObject.FindGameObjectWithTag("Player");
+    }
 }

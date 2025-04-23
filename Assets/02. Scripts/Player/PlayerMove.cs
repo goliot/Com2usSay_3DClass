@@ -53,7 +53,6 @@ public class PlayerMove : MonoBehaviour
         UpdateState();
         Move();
         UpdateStamina();
-        Debug.Log(_currentState);
     }
 
     private void GetInput()

@@ -118,6 +118,10 @@ public class PlayerFire : MonoBehaviour
             if (isHit)
             {
                 hitPoint = hitInfo.point;
+                if (hitInfo.collider.CompareTag("Enemy"))
+                {
+                    hitInfo.collider.GetComponent<Enemy>().TakeDamage(_weaponDatas.GetWeapon(EWeaponType.BasicGun).Damage);
+                }
             }
             else
             {
