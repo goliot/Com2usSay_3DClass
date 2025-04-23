@@ -14,4 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyStats:
   - EnemyType: 0
-    MoveSpeed: 0
+    Damage:
+      Value: 10
+      From: {fileID: 0}
+    MoveSpeed: 3.3
+    AttackCoolTime: 1
+    MaxHealth: 100
+    FindDistance: 7
+    AttackDistance: 2.5
+    ReturnDistance: 0.1
+    DamagedTime: 0.5

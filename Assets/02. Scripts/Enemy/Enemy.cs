@@ -1,194 +1,97 @@
-using Unity.Android.Gradle.Manifest;
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public EnemyStatsSO EnemyStats;
     private const float GRAVITY = -9.8f;
-    /*private IEnemyState _currentState;
+
+    [Header("# Stats")]
+    [SerializeField] private EEnemyType _type;
+    private float _health = 100f;
+    public EnemyStat Stat { get; private set; }
+    public float DyingTime { get; private set; } = 2f;
+
+
+    [Header("# Components")]
+    public CharacterController CharacterController { get; private set; }
+
+    public GameObject Player { get; private set; }
+    public Vector3 StartPosition { get; private set; }
+    public float YVelocity { get; private set; }
+
+    private void Awake()
+    {
+        CharacterController = GetComponent<CharacterController>();
+        StartPosition = transform.position;
+        Stat = EnemyStats.GetData(_type);
+        Stat.Damage.From = gameObject;
+    }
+
+    private void OnEnable()
+    {
+        _currentState = IdleState;
+        _health = Stat.MaxHealth;
+    }
+
+    private void Start()
+    {
+        Player = GameObject.FindGameObjectWithTag("Player");
+    }
+    
+    #region FSM
+    private IEnemyState _currentState;
+
+    [Header("# State Classes")]
+    public IdleState IdleState { get; private set; } = new IdleState();
+    public TraceState TraceState { get; private set; } = new TraceState();
+    public AttackState AttackState { get; private set; } = new AttackState();
+    public ReturnState ReturnState { get; private set; } = new ReturnState();
+    public DamagedState DamagedState { get; private set; } = new DamagedState();
+    public DieState DieState { get; private set; } = new DieState();
 
     public void ChangeState(IEnemyState newState)
     {
-        _currentState?.Exit(this);
+        Debug.Log($"{_currentState} -> {newState}");
         _currentState = newState;
         _currentState.Enter(this);
     }
 
     private void Update()
     {
-        _currentState?.Execute(this);
-    }*/
-    public EEnemyState CurrentState = EEnemyState.Idle;
-
-    [Header("# Stats")]
-    [SerializeField] private EEnemyType _type;
-    [SerializeField] private EnemyStatsSO _enemyStats;
-    public EnemyStatsSO EnemyStats => _enemyStats;
-    private EnemyStat _stat;
-
-    [SerializeField] private float _moveSpeed = 3.3f;
-    [SerializeField] private float _attackCoolTime = 1f;
-    [SerializeField] private float _maxHealth = 100f;
-    [SerializeField] private float _health = 100f;
-
-    [Header("# Distances")]
-    [SerializeField] private float _findDistance = 7f;
-    [SerializeField] private float _attackDistance = 2.5f;
-    [SerializeField] private float _returnDistance = 0.1f;
-    [SerializeField] private float _damagedTime = 0.5f; // 경직 시간
-
-    [Header("# Components")]
-    private CharacterController _characterController;
-
-    private GameObject _player;
-    private Vector3 _startPosition;
-    private float _atkTimer;
-    private float _yVelocity;
-    private float _damagedTimer;
-
-    private void Awake()
-    {
-        _characterController = GetComponent<CharacterController>();
-        _startPosition = transform.position;
-        _stat = _enemyStats.GetData(_type);
-    }
-
-    private void Start()
-    {
-        _player = GameObject.FindGameObjectWithTag("Player");
-    }
-
-    private void Update()
-    {
-        _atkTimer += Time.deltaTime;
         ApplyGravity();
-        switch (CurrentState)
-        {
-            case EEnemyState.Idle:
-                Idle();
-                break;
-            case EEnemyState.Trace:
-                Trace();
-                break;
-            case EEnemyState.Return:
-                Return();
-                break;
-            case EEnemyState.Attack:
-                Attack();
-                break;
-            case EEnemyState.Damaged:
-                Damaged();
-                break;
-            case EEnemyState.Die:
-                Die();
-                break;
-        }
-    }
-
-    public void TakeDamage(DamageInfo damage)
-    {
-        Debug.Log($"적 피격 : {damage.Value}");
-        _health -= damage.Value;
-        _damagedTimer = 0f;
-        CurrentState = EEnemyState.Damaged;
+        _currentState?.Execute(this);
     }
 
     private void ApplyGravity()
     {
-        _yVelocity += GRAVITY * Time.deltaTime;
+        YVelocity += GRAVITY * Time.deltaTime;
     }
 
-    private void Idle()
+    public void TakeDamage(DamageInfo damage)
     {
-        if (Vector3.Distance(transform.position, _player.transform.position) < _findDistance)
+        if (_currentState == DieState)
         {
-            Debug.Log("상태 전환 : Idle -> Trace");
-            CurrentState = EEnemyState.Trace;
-            return;
-        }
-    }
-
-    private void Trace()
-    {
-        if(Vector3.Distance(_player.transform.position, transform.position) <= _attackDistance)
-        {
-            Debug.Log("상태 전환 : Trace -> Attack");
-            CurrentState = EEnemyState.Attack;
-            return;
-        }
-        if(Vector3.Distance(_player.transform.position, transform.position) >= _findDistance)
-        {
-            Debug.Log("상태 전환 : Trace -> Return");
-            CurrentState = EEnemyState.Return;
-            return;
-        }
-        if (Vector3.Distance(transform.position, _player.transform.position) <= _attackDistance)
-        {
-            Debug.Log("상태 전환: Trace -> Attack");
-            CurrentState = EEnemyState.Attack;
             return;
         }
 
-        Vector3 direction = (_player.transform.position - transform.position).normalized;
-        direction.y = _yVelocity;
-        _characterController.Move(direction * _moveSpeed * Time.deltaTime);
-    }
+        Debug.Log($"적 피격 : {damage.Value}");
+        _health -= damage.Value;
 
-    private void Return()
-    {
-        if(Vector3.Distance(transform.position, _startPosition) <= _returnDistance)
-        {
-            Debug.Log("상태 전환 : Return -> Idle");
-            transform.position = _startPosition;
-            CurrentState = EEnemyState.Idle;
-            return;
-        }
-        if(Vector3.Distance(transform.position, _player.transform.position) <= _findDistance)
-        {
-            Debug.Log("상태 전환 : Return -> Trace");
-            CurrentState = EEnemyState.Trace;
-            return;
-        }
-
-        Vector3 direction = (_startPosition - transform.position).normalized;
-        direction.y = _yVelocity;
-        _characterController.Move(direction * _moveSpeed * Time.deltaTime);
-    }
-
-    private void Attack()
-    {
-        if(Vector3.Distance(transform.position, _player.transform.position) >= _attackDistance)
-        {
-            Debug.Log("상태 전환: Attack -> Trace");
-            CurrentState = EEnemyState.Trace;
-            return;
-        }
-
-        if (_atkTimer >= _attackCoolTime)
-        {
-            Debug.Log("공격!");
-            _atkTimer = 0f;
-        }
-    }
-
-    private void Damaged()
-    {
         if (_health <= 0)
         {
             Debug.Log("상태 전환: Damaged -> Die");
-            CurrentState = EEnemyState.Die;
+            ChangeState(DieState);
         }
-
-        _damagedTimer += Time.deltaTime;
-        if(_damagedTimer >= _damagedTime)
+        else
         {
-            _damagedTimer = 0f;
-            Debug.Log("상태 전환: Damaged -> Trace");
-            CurrentState = EEnemyState.Trace;
+            ChangeState(DamagedState);
         }
     }
 
-    private void Die()
+    public void Die()
     {
-
+        Destroy(gameObject);
     }
+    #endregion
 }

@@ -1614,14 +1614,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92c954fb52971cd4ba6fcbea154a25e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentState: 0
+  EnemyStats: {fileID: 11400000, guid: 52c19a9376549f64abcffc86ae0762c1, type: 2}
   _type: 0
-  _enemyStats: {fileID: 11400000, guid: 52c19a9376549f64abcffc86ae0762c1, type: 2}
-  _moveSpeed: 3.3
-  _attackCoolTime: 1
-  _findDistance: 7
-  _attackDistance: 2.5
-  _returnDistance: 0.1
 --- !u!143 &862563050
 CharacterController:
   m_ObjectHideFlags: 0

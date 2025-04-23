@@ -1,17 +1,19 @@
 using UnityEngine;
 
-public class IdleState : IEnemyState
+public class DamagedState : IEnemyState
 {
+    private float _damagedTimer;
+
     void IEnemyState.Enter(Enemy enemy)
     {
+        _damagedTimer = 0f;
     }
 
     void IEnemyState.Execute(Enemy enemy)
     {
-        if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) < enemy.Stat.FindDistance)
+        if(_damagedTimer >= enemy.Stat.DamagedTime)
         {
             enemy.ChangeState(enemy.TraceState);
-            return;
         }
     }
 }
