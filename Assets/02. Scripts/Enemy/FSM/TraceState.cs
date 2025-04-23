@@ -11,12 +11,12 @@ public class TraceState : IEnemyState
     {
         if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
         {
-            enemy.StateMachine.ChangeState(enemy.AttackState);
+            enemy.StateMachine.ChangeState(EEnemyState.Attack);
             return;
         }
         if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) >= enemy.Stat.FindDistance)
         {
-            enemy.StateMachine.ChangeState(enemy.ReturnState);
+            enemy.StateMachine.ChangeState(EEnemyState.Return);
             return;
         }
 

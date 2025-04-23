@@ -3,28 +3,38 @@ using System.Collections.Generic;
 public class EnemyStateMachine
 {
     private Enemy _enemy;
+    public Dictionary<EEnemyState, IEnemyState> StateDictionary { get; private set; }
 
     private IEnemyState _currentState;
     public IEnemyState CurrentState => _currentState;
 
-    public EnemyStateMachine(Enemy enemy, IEnemyState state)
+    public EnemyStateMachine(Enemy enemy, Dictionary<EEnemyState, IEnemyState> stateDictionary)
     {
         _enemy = enemy;
-        _currentState = state;
+        StateDictionary = stateDictionary;
+        _currentState = StateDictionary[EEnemyState.Idle];
     }
 
-    public void ChangeState(IEnemyState newState)
+    public void ChangeState(EEnemyState newState)
     {
-        if (_currentState != null && _currentState != newState)
+        if (StateDictionary.TryGetValue(newState, out IEnemyState state))
         {
-            _currentState.Exit(_enemy);
+            if (_currentState != null && _currentState != state)
+            {
+                _currentState.Exit(_enemy);
+            }
+            _currentState = state;
+            _currentState.Enter(_enemy);
         }
-        _currentState = newState;
-        _currentState.Enter(_enemy);
     }
 
     public void Update()
     {
         _currentState?.Execute(_enemy);
+    }
+
+    public void ModifyState(EEnemyState which, IEnemyState to)
+    {
+        StateDictionary[which] = to;
     }
 }

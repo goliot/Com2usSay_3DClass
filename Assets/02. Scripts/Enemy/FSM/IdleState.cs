@@ -14,12 +14,12 @@ public class IdleState : IEnemyState
         _timer += Time.deltaTime;
         if(_timer >= enemy.Stat.IdleToPatrolTime)
         {
-            enemy.StateMachine.ChangeState(enemy.PatrolState);
+            enemy.StateMachine.ChangeState(EEnemyState.Patrol);
         }
 
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) < enemy.Stat.FindDistance)
         {
-            enemy.StateMachine.ChangeState(enemy.TraceState);
+            enemy.StateMachine.ChangeState(EEnemyState.Trace);
             return;
         }
     }

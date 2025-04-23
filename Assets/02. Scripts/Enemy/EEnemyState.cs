@@ -6,4 +6,5 @@ public enum EEnemyState
     Attack,
     Damaged,
     Die,
+    Patrol,
 }

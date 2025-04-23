@@ -15,7 +15,7 @@ public class AttackState : IEnemyState
 
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) >= enemy.Stat.AttackDistance)
         {
-            enemy.StateMachine.ChangeState(enemy.TraceState);
+            enemy.StateMachine.ChangeState(EEnemyState.Trace);
             return;
         }
 

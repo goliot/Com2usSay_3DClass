@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -26,7 +27,22 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        StateMachine = new EnemyStateMachine(this, _idleState);
+        AwakeInit();
+    }
+
+    protected virtual void AwakeInit()
+    {
+        Dictionary<EEnemyState, IEnemyState> dict = new Dictionary<EEnemyState, IEnemyState>
+        {
+            { EEnemyState.Idle, new IdleState() },
+            { EEnemyState.Trace, new TraceState() },
+            { EEnemyState.Return, new ReturnState() },
+            { EEnemyState.Attack, new AttackState() },
+            { EEnemyState.Damaged, new DamagedState() },
+            { EEnemyState.Die, new DieState() },
+            { EEnemyState.Patrol, new PatrolState() },
+        };
+        StateMachine = new EnemyStateMachine(this, dict);
         CharacterController = GetComponent<CharacterController>();
         StartPosition = transform.position;
         Stat = EnemyStats.GetData(_type);
@@ -42,24 +58,6 @@ public class Enemy : MonoBehaviour
     {
         Player = GameObject.FindGameObjectWithTag("Player");
     }
-
-    #region States
-    protected virtual IEnemyState _idleState => new IdleState();
-    protected virtual IEnemyState _traceState => new TraceState();
-    protected virtual IEnemyState _attackState => new AttackState();
-    protected virtual IEnemyState _returnState => new ReturnState();
-    protected virtual IEnemyState _damagedState => new DamagedState();
-    protected virtual IEnemyState _dieState => new DieState();
-    protected virtual IEnemyState _patrolState => new PatrolState();
-
-    public virtual IEnemyState IdleState => _idleState;
-    public virtual IEnemyState TraceState => _traceState;
-    public virtual IEnemyState AttackState => _attackState;
-    public virtual IEnemyState ReturnState => _returnState;
-    public virtual IEnemyState DamagedState => _damagedState;
-    public virtual IEnemyState DieState => _dieState;
-    public virtual IEnemyState PatrolState => _patrolState;
-    #endregion
 
     private void Update()
     {
@@ -86,11 +84,11 @@ public class Enemy : MonoBehaviour
         if (_health <= 0)
         {
             Debug.Log("상태 전환: Damaged -> Die");
-            StateMachine.ChangeState(DieState);
+            StateMachine.ChangeState(EEnemyState.Die);
         }
         else
         {
-            StateMachine.ChangeState(DamagedState);
+            StateMachine.ChangeState(EEnemyState.Damaged);
         }
     }
     

@@ -11,12 +11,12 @@ public class ReturnState : IEnemyState
         if (Vector3.Distance(enemy.transform.position, enemy.StartPosition) <= enemy.Stat.ReturnDistance)
         {
             enemy.transform.position = enemy.StartPosition;
-            enemy.StateMachine.ChangeState(enemy.IdleState);
+            enemy.StateMachine.ChangeState(EEnemyState.Idle);
             return;
         }
         if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) <= enemy.Stat.FindDistance)
         {
-            enemy.StateMachine.ChangeState(enemy.TraceState);
+            enemy.StateMachine.ChangeState(EEnemyState.Trace);
             return;
         }
 

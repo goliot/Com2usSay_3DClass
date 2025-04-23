@@ -36,7 +36,7 @@ public class PatrolState : IEnemyState
         }
         if(Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) <= enemy.Stat.FindDistance)
         {
-            enemy.StateMachine.ChangeState(enemy.TraceState);
+            enemy.StateMachine.ChangeState(EEnemyState.Trace);
         }
         Vector3 direction = (_nextPoint - enemy.transform.position).normalized;
         direction.y = enemy.YVelocity;
