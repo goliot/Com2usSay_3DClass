@@ -117,6 +117,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void Die()
     {
-        Destroy(gameObject);
+        EnemyPoolManager.Instance.ReturnObject(gameObject, _type);
     }
 }
