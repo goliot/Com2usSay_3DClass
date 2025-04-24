@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private const float GRAVITY = -9.8f;
 
     [Header("# Stats")]
-    [SerializeField] private EObjectType _type;
+    [SerializeField] private EEnemyType _type;
     private float _health = 100f;
     public EnemyStat Stat { get; private set; }
     public float DyingTime { get; private set; } = 2f;
@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
 
     [Header("# StateMachine")]
-    public EnemyStateMachine StateMachine { get; private set; }
+    public EnemyStateMachine StateMachine { get; protected set; }
 
     private void Awake()
     {
@@ -43,6 +43,9 @@ public class Enemy : MonoBehaviour, IDamageable
         NavAgent.speed = Stat.MoveSpeed;
     }
 
+    /// <summary>
+    /// 행동 정의
+    /// </summary>
     protected virtual void AwakeInit()
     {
         Dictionary<EEnemyState, IEnemyState> dict = new Dictionary<EEnemyState, IEnemyState>
@@ -60,6 +63,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void OnEnable()
     {
+        StateMachine.ChangeState(EEnemyState.Idle);
         _health = Stat.MaxHealth;
     }
 

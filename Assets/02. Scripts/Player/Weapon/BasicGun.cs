@@ -54,7 +54,7 @@ public class BasicGun : MonoBehaviour
         }
 
         trail.transform.position = hit.point;
-        PoolManager.Instance.GetObject(EObjectType.BulletImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+        CommonPoolManager.Instance.GetObject(EObjectType.BulletImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
 
         Destroy(trail.gameObject, trail.time); //TODO: 풀링으로 바꿔
     }

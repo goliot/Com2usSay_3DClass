@@ -3,13 +3,13 @@ using UnityEngine;
 [System.Serializable]
 public class EnemyStat
 {
-    public EObjectType EnemyType;
+    public EEnemyType EnemyType;
     public DamageInfo Damage;
     public float MoveSpeed = 3.3f;
     public float AttackCoolTime = 1f;
     public float MaxHealth = 100f;
 
-    [Header("# Distances")]
+    [Header("# About States")]
     public float FindDistance = 7f;
     public float AttackDistance = 2.5f;
     public float ReturnDistance = 0.1f;

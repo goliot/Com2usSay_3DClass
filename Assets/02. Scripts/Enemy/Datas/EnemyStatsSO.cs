@@ -6,11 +6,11 @@ public class EnemyStatsSO : ScriptableObject
 {
     public List<EnemyStat> EnemyStats;
 
-    private Dictionary<EObjectType, EnemyStat> _enemyDict;
+    private Dictionary<EEnemyType, EnemyStat> _enemyDict;
 
     public void Init()
     {
-        _enemyDict = new Dictionary<EObjectType, EnemyStat>();
+        _enemyDict = new Dictionary<EEnemyType, EnemyStat>();
         foreach (var data in EnemyStats)
         {
             if (!_enemyDict.ContainsKey(data.EnemyType))
@@ -18,7 +18,7 @@ public class EnemyStatsSO : ScriptableObject
         }
     }
 
-    public EnemyStat GetData(EObjectType type)
+    public EnemyStat GetData(EEnemyType type)
     {
         if (_enemyDict == null)
             Init();

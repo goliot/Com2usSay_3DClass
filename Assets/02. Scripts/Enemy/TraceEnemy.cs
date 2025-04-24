@@ -1,12 +1,17 @@
+using System.Collections.Generic;
+
 public class TraceEnemy : Enemy
 {
-    //임시
-    IEnemyState RangeAttackState = new AttackState();
-
     protected override void AwakeInit()
     {
-        base.AwakeInit();
-
-        StateMachine.ModifyState(EEnemyState.Attack, RangeAttackState);
+        Dictionary<EEnemyState, IEnemyState> dict = new Dictionary<EEnemyState, IEnemyState>
+        {
+            { EEnemyState.Idle, new IdleState() },
+            { EEnemyState.Trace, new TraceEnemyTraceState() },
+            { EEnemyState.Attack, new AttackState() },
+            { EEnemyState.Damaged, new DamagedState() },
+            { EEnemyState.Die, new DieState() },
+        };
+        StateMachine = new EnemyStateMachine(this, dict);
     }
 }

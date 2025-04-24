@@ -17,6 +17,7 @@ public class Barrel : MonoBehaviour, IDamageable
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _damage.From = gameObject;
     }
 
     private void OnEnable()
@@ -43,8 +44,6 @@ public class Barrel : MonoBehaviour, IDamageable
 
     private void Explode()
     {
-        GameObject effect = PoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect, transform.position);
-
         Collider[] hits = Physics.OverlapSphere(transform.position, _explodeRange);
         foreach(var hit in hits)
         {
@@ -58,11 +57,14 @@ public class Barrel : MonoBehaviour, IDamageable
 
     private IEnumerator CoExplode()
     {
-        _rigidbody.AddForce(Random.onUnitSphere * _force, ForceMode.Impulse);
-        _rigidbody.AddTorque(Random.onUnitSphere * _force, ForceMode.Impulse);
+        GameObject effect = CommonPoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect, transform.position);
 
-        yield return new WaitForSeconds(2f);
+        Vector3 randomDir = (Vector3.one + Random.insideUnitSphere * 0.5f).normalized;
+        _rigidbody.AddForce(randomDir * _force, ForceMode.Impulse);
+        _rigidbody.AddTorque(Random.onUnitSphere * _force * 0.5f, ForceMode.Impulse);
 
-        PoolManager.Instance.ReturnObject(gameObject, EObjectType.Barrel);
+        yield return new WaitForSeconds(4f);
+
+        Destroy(gameObject);
     }
 }

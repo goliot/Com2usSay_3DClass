@@ -34,7 +34,7 @@ public class Granade : MonoBehaviour
 
     private void Explode()
     {
-        PoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect, transform.position);
+        CommonPoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect, transform.position);
 
         Collider[] hits = Physics.OverlapSphere(transform.position, _explodeRange);
         foreach(var hit in hits)
@@ -45,6 +45,6 @@ public class Granade : MonoBehaviour
             }
         }
 
-        PoolManager.Instance.ReturnObject(gameObject, EObjectType.Granade);
+        CommonPoolManager.Instance.ReturnObject(gameObject, EObjectType.Granade);
     }
 }

@@ -105,7 +105,7 @@ public class PlayerFire : MonoBehaviour
             }
             _muzzleFlash.SetActive(true);
 
-            GameObject tracerBullet = PoolManager.Instance.GetObject(EObjectType.TracerBullet, _firePosition.transform.position, Quaternion.identity);
+            GameObject tracerBullet = CommonPoolManager.Instance.GetObject(EObjectType.TracerBullet, _firePosition.transform.position, Quaternion.identity);
 
             Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
             RaycastHit hitInfo;
@@ -115,9 +115,9 @@ public class PlayerFire : MonoBehaviour
             if (isHit)
             {
                 hitPoint = hitInfo.point;
-                if (hitInfo.collider.CompareTag("Enemy"))
+                if (hitInfo.collider.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    hitInfo.collider.GetComponent<IDamageable>().TakeDamage(_weaponDatas.GetWeapon(EWeaponType.BasicGun).Damage);
+                    damageable.TakeDamage(_weaponDatas.GetWeapon(EWeaponType.BasicGun).Damage);
                 }
             }
             else
@@ -148,11 +148,11 @@ public class PlayerFire : MonoBehaviour
 
         if (normal.HasValue)
         {
-            PoolManager.Instance.GetObject(EObjectType.BulletImpactEffect, targetPoint, Quaternion.LookRotation(normal.Value));
+            CommonPoolManager.Instance.GetObject(EObjectType.BulletImpactEffect, targetPoint, Quaternion.LookRotation(normal.Value));
         }
 
         yield return new WaitForSeconds(trail.time);
-        PoolManager.Instance.ReturnObject(trail.gameObject, EObjectType.TracerBullet);
+        CommonPoolManager.Instance.ReturnObject(trail.gameObject, EObjectType.TracerBullet);
     }
 
 
@@ -176,7 +176,7 @@ public class PlayerFire : MonoBehaviour
     {
         if (!_isCharging) return;
 
-        GameObject granade = PoolManager.Instance.GetObject(_bombType, _firePosition.position);
+        GameObject granade = CommonPoolManager.Instance.GetObject(_bombType, _firePosition.position);
 
         Rigidbody granadeRigidbody = granade.GetComponent<Granade>().Rigidbody;
         granadeRigidbody.AddForce(_mainCamera.transform.forward * _chargePower, ForceMode.Impulse);

@@ -16,6 +16,18 @@ public class MinimapCamera : MonoBehaviour
         _camera = GetComponent<Camera>();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            OnClickMinimapZoomOut();
+        }
+        if(Input.GetKeyDown(KeyCode.Minus))
+        {
+            OnClickMinimapZoomIn();
+        }
+    }
+
     private void LateUpdate()
     {
         Vector3 newPosition = _target.position;
