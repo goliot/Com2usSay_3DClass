@@ -3,11 +3,11 @@ using UnityEngine;
 public class TraceState : IEnemyState
 {
 
-    void IEnemyState.Enter(Enemy enemy)
+    public void Enter(Enemy enemy)
     {
     }
 
-    void IEnemyState.Execute(Enemy enemy)
+    public void Execute(Enemy enemy)
     {
         if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
         {
@@ -27,7 +27,7 @@ public class TraceState : IEnemyState
         //enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
     }
 
-    void IEnemyState.Exit(Enemy enemy)
+    public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
     }

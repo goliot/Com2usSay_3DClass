@@ -1,6 +1,6 @@
 public interface IEnemyState
 {
-    void Enter(Enemy enemy);
-    void Execute(Enemy enemy);
-    void Exit(Enemy enemy);
+    public void Enter(Enemy enemy);
+    public void Execute(Enemy enemy);
+    public void Exit(Enemy enemy);
 }

@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class ReturnState : IEnemyState
 {
-    void IEnemyState.Enter(Enemy enemy)
+    public void Enter(Enemy enemy)
     {
     }
 
-    void IEnemyState.Execute(Enemy enemy)
+    public void Execute(Enemy enemy)
     {
         if (Vector3.Distance(enemy.transform.position, enemy.StartPosition) <= enemy.Stat.ReturnDistance)
         {

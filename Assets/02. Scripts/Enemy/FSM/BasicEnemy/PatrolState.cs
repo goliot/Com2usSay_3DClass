@@ -8,7 +8,7 @@ public class PatrolState : IEnemyState
 
     private float _changePointTimer;
 
-    void IEnemyState.Enter(Enemy enemy)
+    public void Enter(Enemy enemy)
     {
         _changePointTimer = 0;
 
@@ -25,7 +25,7 @@ public class PatrolState : IEnemyState
         _nextPoint = _patrolPoints[0];
     }
 
-    void IEnemyState.Execute(Enemy enemy)
+    public void Execute(Enemy enemy)
     {
         _changePointTimer += Time.deltaTime;
 
@@ -46,7 +46,7 @@ public class PatrolState : IEnemyState
         //enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
     }
 
-    void IEnemyState.Exit(Enemy enemy)
+    public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
     }

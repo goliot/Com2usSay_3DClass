@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class TraceEnemyTraceState : IEnemyState
 {
-    void IEnemyState.Enter(Enemy enemy)
+    public void Enter(Enemy enemy)
     {
         enemy.NavAgent.isStopped = false;
     }
 
-    void IEnemyState.Execute(Enemy enemy)
+    public void Execute(Enemy enemy)
     {
         if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
         {
@@ -18,7 +18,7 @@ public class TraceEnemyTraceState : IEnemyState
         enemy.NavAgent.SetDestination(enemy.Player.transform.position);
     }
 
-    void IEnemyState.Exit(Enemy enemy)
+    public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
     }

@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour, IDamageable
         YVelocity += GRAVITY * Time.deltaTime;
     }
 
-    void IDamageable.TakeDamage(DamageInfo damage)
+    public void TakeDamage(DamageInfo damage)
     {
         if (StateMachine.CurrentState.GetType() == typeof(DieState))
         {

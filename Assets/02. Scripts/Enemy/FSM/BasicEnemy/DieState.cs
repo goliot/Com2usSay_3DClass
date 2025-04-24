@@ -4,13 +4,13 @@ public class DieState : IEnemyState
 {
     float _dieTimer;
 
-    void IEnemyState.Enter(Enemy enemy)
+    public void Enter(Enemy enemy)
     {
         _dieTimer = 0f;
         enemy.NavAgent.isStopped = true;
     }
 
-    void IEnemyState.Execute(Enemy enemy)
+    public void Execute(Enemy enemy)
     {
         _dieTimer += Time.deltaTime;
         if(_dieTimer >= enemy.DyingTime)
@@ -18,7 +18,7 @@ public class DieState : IEnemyState
             enemy.StateMachine.ChangeState(EEnemyState.Idle);
         }
     }
-    void IEnemyState.Exit(Enemy enemy)
+    public void Exit(Enemy enemy)
     {
         enemy.NavAgent.isStopped = false;
         enemy.NavAgent.ResetPath();

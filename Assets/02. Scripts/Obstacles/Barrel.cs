@@ -26,7 +26,7 @@ public class Barrel : MonoBehaviour, IDamageable
         _isDead = false;
     }
 
-    void IDamageable.TakeDamage(DamageInfo damage)
+    public void TakeDamage(DamageInfo damage)
     {
         if(_isDead)
         {

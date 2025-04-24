@@ -4,12 +4,12 @@ public class AttackState : IEnemyState
 {
     float _timer;
 
-    void IEnemyState.Enter(Enemy enemy)
+    public void Enter(Enemy enemy)
     {
         _timer = 0f;
     }
 
-    void IEnemyState.Execute(Enemy enemy)
+    public void Execute(Enemy enemy)
     {
         _timer += Time.deltaTime;
 
@@ -31,7 +31,7 @@ public class AttackState : IEnemyState
         Debug.Log("공격!");
     }
 
-    void IEnemyState.Exit(Enemy enemy)
+    public void Exit(Enemy enemy)
     {
 
     }

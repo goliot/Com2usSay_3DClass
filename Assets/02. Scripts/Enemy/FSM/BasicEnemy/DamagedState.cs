@@ -4,12 +4,12 @@ public class DamagedState : IEnemyState
 {
     private float _damagedTimer;
 
-    void IEnemyState.Enter(Enemy enemy)
+    public void Enter(Enemy enemy)
     {
         _damagedTimer = 0f;
     }
 
-    void IEnemyState.Execute(Enemy enemy)
+    public void Execute(Enemy enemy)
     {
         _damagedTimer += Time.deltaTime;
 
@@ -20,7 +20,7 @@ public class DamagedState : IEnemyState
         }
     }
 
-    void IEnemyState.Exit(Enemy enemy)
+    public void Exit(Enemy enemy)
     {
 
     }
