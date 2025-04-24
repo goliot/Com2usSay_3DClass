@@ -24,6 +24,7 @@ public class Barrel : MonoBehaviour, IDamageable
     {
         _hp = _maxHp;
         _isDead = false;
+        _rigidbody.isKinematic = true;
     }
 
     public void TakeDamage(DamageInfo damage)
@@ -49,6 +50,7 @@ public class Barrel : MonoBehaviour, IDamageable
         {
             if(hit.TryGetComponent<IDamageable>(out var damageable))
             {
+                _rigidbody.isKinematic = false;
                 damageable.TakeDamage(_damage);
                 StartCoroutine(CoExplode());
             }
