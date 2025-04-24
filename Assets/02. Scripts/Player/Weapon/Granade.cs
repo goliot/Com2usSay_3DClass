@@ -5,6 +5,9 @@ public class Granade : MonoBehaviour
     private Rigidbody _rigidbody;
     public Rigidbody Rigidbody => _rigidbody;
 
+    [SerializeField] private float _explodeRange;
+    [SerializeField] private DamageInfo Damage;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -26,8 +29,22 @@ public class Granade : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        GameObject bombEffect = PoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect);
-        bombEffect.transform.position = transform.position;
+        Explode();
+    }
+
+    private void Explode()
+    {
+        PoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect, transform.position);
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, _explodeRange);
+        foreach(var hit in hits)
+        {
+            if(hit.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.TakeDamage(Damage);
+            }
+        }
+
         PoolManager.Instance.ReturnObject(gameObject, EObjectType.Granade);
     }
 }

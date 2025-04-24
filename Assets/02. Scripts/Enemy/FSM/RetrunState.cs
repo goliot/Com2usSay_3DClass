@@ -20,9 +20,10 @@ public class ReturnState : IEnemyState
             return;
         }
 
-        Vector3 direction = (enemy.StartPosition - enemy.transform.position).normalized;
-        direction.y = enemy.YVelocity;
-        enemy.CharacterController.Move(direction * enemy.Stat.MoveSpeed * Time.deltaTime);
+        enemy.NavAgent.SetDestination(enemy.StartPosition);
+        //Vector3 direction = (enemy.StartPosition - enemy.transform.position).normalized;
+        //direction.y = enemy.YVelocity;
+        //enemy.CharacterController.Move(direction * enemy.Stat.MoveSpeed * Time.deltaTime);
     }
     void IEnemyState.Exit(Enemy enemy)
     {

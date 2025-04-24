@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     public EnemyStatsSO EnemyStats;
     private const float GRAVITY = -9.8f;
 
     [Header("# Stats")]
-    [SerializeField] private EEnemyType _type;
+    [SerializeField] private EObjectType _type;
     private float _health = 100f;
     public EnemyStat Stat { get; private set; }
     public float DyingTime { get; private set; } = 2f;
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
 
     [Header("# Components")]
     public CharacterController CharacterController { get; private set; }
+    public NavMeshAgent NavAgent { get; private set; }
 
     public GameObject Player { get; private set; }
     public Vector3 StartPosition { get; private set; }
@@ -27,7 +29,18 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
+        AwakeInitCommon();
         AwakeInit();
+    }
+
+    private void AwakeInitCommon()
+    {
+        CharacterController = GetComponent<CharacterController>();
+        NavAgent = GetComponent<NavMeshAgent>();
+        StartPosition = transform.position;
+        Stat = EnemyStats.GetData(_type);
+        Stat.Damage.From = gameObject;
+        NavAgent.speed = Stat.MoveSpeed;
     }
 
     protected virtual void AwakeInit()
@@ -43,10 +56,6 @@ public class Enemy : MonoBehaviour
             { EEnemyState.Patrol, new PatrolState() },
         };
         StateMachine = new EnemyStateMachine(this, dict);
-        CharacterController = GetComponent<CharacterController>();
-        StartPosition = transform.position;
-        Stat = EnemyStats.GetData(_type);
-        Stat.Damage.From = gameObject;
     }
 
     private void OnEnable()
@@ -70,7 +79,7 @@ public class Enemy : MonoBehaviour
         YVelocity += GRAVITY * Time.deltaTime;
     }
 
-    public void TakeDamage(DamageInfo damage)
+    void IDamageable.TakeDamage(DamageInfo damage)
     {
         if (StateMachine.CurrentState.GetType() == typeof(DieState))
         {

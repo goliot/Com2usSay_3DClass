@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class EnemyStat
 {
-    public EEnemyType EnemyType;
+    public EObjectType EnemyType;
     public DamageInfo Damage;
     public float MoveSpeed = 3.3f;
     public float AttackCoolTime = 1f;

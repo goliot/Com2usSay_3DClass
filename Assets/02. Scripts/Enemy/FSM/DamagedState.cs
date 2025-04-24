@@ -16,8 +16,10 @@ public class DamagedState : IEnemyState
         if(_damagedTimer >= enemy.Stat.DamagedTime)
         {
             enemy.StateMachine.ChangeState(EEnemyState.Trace);
+            return;
         }
     }
+
     void IEnemyState.Exit(Enemy enemy)
     {
 

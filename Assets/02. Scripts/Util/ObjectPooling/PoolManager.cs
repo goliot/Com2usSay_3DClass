@@ -57,6 +57,43 @@ public class PoolManager : Singleton<PoolManager>
         return obj;
     }
 
+    public GameObject GetObject(EObjectType type, Vector3 position)
+    {
+        PoolInfo info = Instance.GetPoolByType(type);
+        GameObject obj = null;
+        if (info.PoolQueue.Count > 0)
+        {
+            obj = info.PoolQueue.Dequeue();
+        }
+        else
+        {
+            obj = Instance.CreateNewObject(info);
+        }
+        obj.transform.position = position;
+        obj.SetActive(true);
+
+        return obj;
+    }
+
+    public GameObject GetObject(EObjectType type, Vector3 position, Quaternion rotation)
+    {
+        PoolInfo info = Instance.GetPoolByType(type);
+        GameObject obj = null;
+        if (info.PoolQueue.Count > 0)
+        {
+            obj = info.PoolQueue.Dequeue();
+        }
+        else
+        {
+            obj = Instance.CreateNewObject(info);
+        }
+        obj.transform.position = position;
+        obj.transform.rotation = rotation;
+        obj.SetActive(true);
+
+        return obj;
+    }
+
     public void ReturnObject(GameObject obj, EObjectType type)
     {
         PoolInfo info = Instance.GetPoolByType(type);

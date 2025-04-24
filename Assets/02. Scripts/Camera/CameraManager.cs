@@ -58,6 +58,7 @@ public class CameraManager : Singleton<CameraManager>
         else if(_currentView == ViewMode.Quarter)
         {
             _cameraTransform.position = targetView.position;
+            _cameraTransform.rotation = Quaternion.Euler(45f, 0, 0f); // 예시: 위에서 바라보는 고정 각도
         }
         else
         {

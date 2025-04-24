@@ -20,12 +20,15 @@ public class TraceState : IEnemyState
             return;
         }
 
-        Vector3 direction = (enemy.Player.transform.position - enemy.transform.position).normalized;
-        direction.y = enemy.YVelocity;
-        enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
+        enemy.NavAgent.SetDestination(enemy.Player.transform.position);
+
+        //Vector3 direction = (enemy.Player.transform.position - enemy.transform.position).normalized;
+        //direction.y = enemy.YVelocity;
+        //enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
     }
+
     void IEnemyState.Exit(Enemy enemy)
     {
-
+        enemy.NavAgent.ResetPath();
     }
 }

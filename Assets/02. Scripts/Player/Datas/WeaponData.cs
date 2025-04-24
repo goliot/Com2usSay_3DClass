@@ -8,6 +8,7 @@ public class WeaponData
     public float CoolTime;
     public int MaxAmmo;
     public int ReloadInterval;
+    public float ExplodeRange;
 
     void Init()
     {

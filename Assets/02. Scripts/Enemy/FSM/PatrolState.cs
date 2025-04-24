@@ -38,13 +38,16 @@ public class PatrolState : IEnemyState
         {
             enemy.StateMachine.ChangeState(EEnemyState.Trace);
         }
-        Vector3 direction = (_nextPoint - enemy.transform.position).normalized;
-        direction.y = enemy.YVelocity;
-        enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
+
+        enemy.NavAgent.SetDestination(_nextPoint);
+
+        //Vector3 direction = (_nextPoint - enemy.transform.position).normalized;
+        //direction.y = enemy.YVelocity;
+        //enemy.CharacterController.Move(enemy.Stat.MoveSpeed * Time.deltaTime * direction);
     }
 
     void IEnemyState.Exit(Enemy enemy)
     {
-
+        enemy.NavAgent.ResetPath();
     }
 }

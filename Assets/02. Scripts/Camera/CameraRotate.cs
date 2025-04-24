@@ -26,7 +26,6 @@ public class CameraRotate : MonoBehaviour
                 break;
 
             case CameraManager.ViewMode.Quarter:
-                HandleQuarterViewRotation(mouseX);
                 break;
         }
     }
@@ -47,10 +46,5 @@ public class CameraRotate : MonoBehaviour
 
         // 카메라 자체를 회전시키는 게 아니라, "타겟(뷰)"의 회전을 바꾼다
         transform.localRotation = Quaternion.Euler(_rotationY, _rotationX, 0);
-    }
-
-    private void HandleQuarterViewRotation(float mouseX)
-    {
-        transform.eulerAngles = new Vector3(45, 0, 0); // 수평 회전만 적용
     }
 }

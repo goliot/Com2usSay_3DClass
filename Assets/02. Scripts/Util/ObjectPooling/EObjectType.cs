@@ -5,5 +5,8 @@ public enum EObjectType
     BulletFireEffect,
     BulletImpactEffect,
     TracerBullet,
+    BasicEnemy,
+    TraceEnemy,
+    Barrel,
     Count,
 }
