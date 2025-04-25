@@ -10,8 +10,8 @@ public class PlayerMove : MonoBehaviour
 
     [Header("# Components")]
     private CharacterController _characterController;
-    [SerializeField] private PlayerStatSO _playerStat;
-    public PlayerStatSO PlayerStat => _playerStat;
+    [SerializeField] private PlayerMovementStatSO _playerStat;
+    public PlayerMovementStatSO PlayerStat => _playerStat;
 
     [Header("# States")]
     private EPlayerState _currentState;
@@ -26,6 +26,7 @@ public class PlayerMove : MonoBehaviour
     private bool _isClimbingWall = false;
 
     public static Action<float, float> OnStaminaChange;
+    public static Action<EPlayerState> OnMoveChange;
 
     private void Awake()
     {
@@ -75,12 +76,14 @@ public class PlayerMove : MonoBehaviour
             _currentState = EPlayerState.Climbing;
             _currentSpeed = _playerStat.ClimbSpeed;
             _isClimbingWall = true;
+            OnMoveChange?.Invoke(_currentState);
         }
         else if ((_isClimbingWall && !CheckWallInFront()) || _currentStamina <= 0)
         {
-            _currentState = EPlayerState.Idle;
+            _currentState = EPlayerState.Walking;
             _currentSpeed = _playerStat.WalkSpeed;
             _isClimbingWall = false;
+            OnMoveChange?.Invoke(_currentState);
         }
 
         // 달리기
@@ -88,11 +91,13 @@ public class PlayerMove : MonoBehaviour
         {
             _currentState = EPlayerState.Sprinting;
             _currentSpeed = _playerStat.SprintSpeed;
+            OnMoveChange?.Invoke(_currentState);
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            _currentState = EPlayerState.Idle;
+            _currentState = EPlayerState.Walking;
             _currentSpeed = _playerStat.WalkSpeed;
+            OnMoveChange?.Invoke(_currentState);
         }
         // 구르기
         else if (Input.GetKeyDown(KeyCode.E) && _currentStamina >= _playerStat.RollStamina)
@@ -101,15 +106,17 @@ public class PlayerMove : MonoBehaviour
             _currentSpeed = _playerStat.RollSpeed;
             _currentStamina -= _playerStat.RollStamina;
             StartCoroutine(CoRoll());
+            OnMoveChange?.Invoke(_currentState);
         }
         // 점프
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             if (_characterController.isGrounded || _jumpCount < 2)
             {
-                _currentState = EPlayerState.Idle;
+                _currentState = EPlayerState.Jumping;
                 _yVelocity = _playerStat.JumpPower;
                 _jumpCount++;
+                OnMoveChange?.Invoke(EPlayerState.Jumping);
             }
         }
     }

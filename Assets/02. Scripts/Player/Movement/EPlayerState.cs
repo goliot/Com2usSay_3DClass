@@ -4,4 +4,6 @@ public enum EPlayerState
     Sprinting,
     Rolling,
     Climbing,
+    Jumping,
+    Walking,
 }

@@ -21,14 +21,18 @@ public class AttackState : IEnemyState
 
         if (_timer >= enemy.Stat.AttackCoolTime)
         {
-            PerformAttack();
+            PerformAttack(enemy);
             _timer = 0f;
         }
     }
 
-    private void PerformAttack()
+    private void PerformAttack(Enemy enemy)
     {
         Debug.Log("공격!");
+        if(enemy.Player.TryGetComponent<IDamageable>(out var damageable))
+        {
+            damageable.TakeDamage(enemy.Stat.Damage);
+        }
     }
 
     public void Exit(Enemy enemy)

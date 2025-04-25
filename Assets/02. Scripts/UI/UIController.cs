@@ -1,8 +1,9 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIController : MonoBehaviour
+public class UIController : Singleton<UIController>
 {
     [Header("# Stamina")]
     [SerializeField] private Slider _staminaSlider;
@@ -22,6 +23,7 @@ public class UIController : MonoBehaviour
         PlayerFire.OnGrandeNumberChanged += UpdateGranadeInfo;
         PlayerFire.OnReload += UpdateReloadProcess;
         PlayerFire.OnGranadeCharge += UpdateChargeSlider;
+        Player.OnDamaged += DamageEffect;
     }
 
     private void UpdateStaminaSlider(float currentPlayerStamina, float maxStamina)
@@ -57,5 +59,10 @@ public class UIController : MonoBehaviour
     private void UpdateChargeSlider(float curPower , float maxPower)
     {
         _granadeChargeSlider.value = curPower / maxPower;
+    }
+
+    private void DamageEffect()
+    {
+
     }
 }
