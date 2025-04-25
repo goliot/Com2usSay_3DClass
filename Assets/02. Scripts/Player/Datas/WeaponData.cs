@@ -10,7 +10,7 @@ public class WeaponData
     public int ReloadInterval;
     public float ExplodeRange;
 
-    void Init()
+    public void Init()
     {
         Damage.From = GameObject.FindGameObjectWithTag("Player");
     }

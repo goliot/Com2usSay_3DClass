@@ -34,9 +34,9 @@ public class CameraManager : Singleton<CameraManager>
 
     private void HandleViewChange()
     {
-        if (Keyboard.current.digit1Key.wasPressedThisFrame) SetViewMode(ViewMode.FPS);
-        if (Keyboard.current.digit2Key.wasPressedThisFrame) SetViewMode(ViewMode.TPS);
-        if (Keyboard.current.digit3Key.wasPressedThisFrame) SetViewMode(ViewMode.Quarter);
+        if (Input.GetKeyDown(KeyCode.Alpha8)) SetViewMode(ViewMode.FPS);
+        if (Input.GetKeyDown(KeyCode.Alpha9)) SetViewMode(ViewMode.TPS);
+        if (Input.GetKeyDown(KeyCode.Alpha0)) SetViewMode(ViewMode.Quarter);
     }
 
     private void SetViewMode(ViewMode newView)
