@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : Singleton<UIController>
 {
+    [Header("# Hp")]
+    [SerializeField] private Slider _hpSlider;
+
     [Header("# Stamina")]
     [SerializeField] private Slider _staminaSlider;
 
@@ -13,9 +17,14 @@ public class UIController : Singleton<UIController>
     [SerializeField] private TextMeshProUGUI _granadeInfoText;
     [SerializeField] private Image _reloadProcessImage;
 
+    [Header("# Damage Effect")]
+    [SerializeField] private Image _damageEffect;
+    private Coroutine _damageCoroutine;
+    private Color _originColor = new Color(1, 1, 1, 0.8f);
+    [SerializeField] private float _fadeDuration = 3f;
+
     [Header("# Granade Charge")]
     [SerializeField] private Slider _granadeChargeSlider;
-
     private void Awake()
     {
         PlayerMove.OnStaminaChange += UpdateStaminaSlider;
@@ -24,6 +33,7 @@ public class UIController : Singleton<UIController>
         PlayerFire.OnReload += UpdateReloadProcess;
         PlayerFire.OnGranadeCharge += UpdateChargeSlider;
         Player.OnDamaged += DamageEffect;
+        Player.OnHpChanged += UpdateHpSlider;
     }
 
     private void UpdateStaminaSlider(float currentPlayerStamina, float maxStamina)
@@ -61,8 +71,39 @@ public class UIController : Singleton<UIController>
         _granadeChargeSlider.value = curPower / maxPower;
     }
 
+    private void UpdateHpSlider(float curHp, float maxHp)
+    {
+        _hpSlider.value = curHp / maxHp;
+    }
+
     private void DamageEffect()
     {
+        _damageEffect.gameObject.SetActive(true);
+        _damageEffect.color = _originColor;
+        if (_damageCoroutine != null)
+        {
+            StopCoroutine(_damageCoroutine);
+        }
+        _damageCoroutine = StartCoroutine(CoDamageEffect());
+    }
 
+    private IEnumerator CoDamageEffect()
+    {
+        Color color = _damageEffect.color;
+        float elapsed = 0f;
+
+        while (elapsed < _fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Clamp01(1 - (elapsed / _fadeDuration));
+            _damageEffect.color = new Color(color.r, color.g, color.b, alpha);
+            yield return null;
+        }
+
+        // 보정
+        _damageEffect.color = new Color(color.r, color.g, color.b, 0f);
+
+        _damageEffect.gameObject.SetActive(false);
+        _damageCoroutine = null;
     }
 }

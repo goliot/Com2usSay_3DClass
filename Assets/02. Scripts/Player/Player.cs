@@ -9,6 +9,7 @@ public class Player : MonoBehaviour, IDamageable
     private float _hp;
 
     public static Action OnDamaged;
+    public static Action<float, float> OnHpChanged;
 
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         _hp -= damage.Value;
         OnDamaged?.Invoke();
+        OnHpChanged?.Invoke(_hp, _stat.MaxHp);
 
         if(_hp <= 0)
         {
