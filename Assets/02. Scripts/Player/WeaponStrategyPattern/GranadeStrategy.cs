@@ -65,7 +65,7 @@ public class GranadeStrategy : IWeaponStrategy
 
     private void ThrowGranade(PlayerFire playerFire)
     {
-        GameObject granade = CommonPoolManager.Instance.GetObject(playerFire.BombType, playerFire.FirePosition.position);
+        GameObject granade = CommonPoolManager.Instance.GetObject(EObjectType.Granade, playerFire.FirePosition.position);
         Granade granadeComponent = granade.GetComponent<Granade>();
         granadeComponent.SetDamage(_weaponData.Damage, _weaponData.ExplodeRange);
 

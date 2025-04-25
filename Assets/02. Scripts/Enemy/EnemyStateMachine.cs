@@ -28,6 +28,11 @@ public class EnemyStateMachine
         }
     }
 
+    public IEnemyState GetState(EEnemyState state)
+    {
+        return StateDictionary[state];
+    }
+
     public void Update()
     {
         _currentState?.Execute(_enemy);

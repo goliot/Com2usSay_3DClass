@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
 
     [Header("# Components")]
-    public CharacterController CharacterController { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
     public NavMeshAgent NavAgent { get; private set; }
 
     public GameObject Player { get; private set; }
@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void AwakeInitCommon()
     {
-        CharacterController = GetComponent<CharacterController>();
+        //Rigidbody = GetComponent<Rigidbody>();
         NavAgent = GetComponent<NavMeshAgent>();
         StartPosition = transform.position;
         Stat = EnemyStats.GetData(_type);
@@ -57,6 +57,7 @@ public class Enemy : MonoBehaviour, IDamageable
             { EEnemyState.Damaged, new DamagedState() },
             { EEnemyState.Die, new DieState() },
             { EEnemyState.Patrol, new PatrolState() },
+            { EEnemyState.KnockBack, new KnockBackState() },
         };
         StateMachine = new EnemyStateMachine(this, dict);
     }
@@ -92,27 +93,21 @@ public class Enemy : MonoBehaviour, IDamageable
 
         Debug.Log($"적 피격 : {damage.Value}");
         _health -= damage.Value;
-        KnockBack(damage.KnockBackAmount, damage.From);
+
+        // 넉백 상태로 전환
+        Vector3 knockbackDirection = transform.position - damage.From.transform.position;
+        knockbackDirection.y = 0;
+        knockbackDirection.Normalize();
+
+        var knockBackState = StateMachine.GetState(EEnemyState.KnockBack) as KnockBackState;
+        knockBackState.SetKnockBackInfo(knockbackDirection, damage.KnockBackAmount);
+        StateMachine.ChangeState(EEnemyState.KnockBack);
 
         if (_health <= 0)
         {
             Debug.Log("상태 전환: Damaged -> Die");
             StateMachine.ChangeState(EEnemyState.Die);
         }
-        else
-        {
-            StateMachine.ChangeState(EEnemyState.Damaged);
-        }
-    }
-    
-    private void KnockBack(float amount, GameObject from)
-    {
-        Vector3 knockbackDirection = transform.position - from.transform.position;  // _lastHitPosition은 마지막으로 공격 받은 지점
-        knockbackDirection.y = 0; 
-
-        knockbackDirection.Normalize();
-
-        CharacterController.Move(knockbackDirection * amount);
     }
 
     public void Die()

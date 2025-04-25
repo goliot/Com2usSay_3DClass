@@ -4,22 +4,32 @@ using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
 
+[System.Serializable]
+public class WeaponPrefab
+{
+    public EWeaponType weaponType;
+    public GameObject prefab;
+}
+
 public class PlayerFire : MonoBehaviour
 {
     [Header("# WeaponData")]
     [SerializeField] private WeaponDataSO _weaponDatas;
     public WeaponDataSO WeaponDatas => _weaponDatas;
 
+    [Header("# WeaponObejct")]
+    //[SerializeField] private List<WeaponPrefab> _weaponPrefabs = new List<WeaponPrefab>();
+    //private Dictionary<EWeaponType, GameObject> _weaponObjects = new Dictionary<EWeaponType, GameObject>();
+    private EWeaponType _currentWeaponType = EWeaponType.BasicGun;
+
+    [Header("# Effects")]
     [SerializeField] private Transform _firePosition;
     public Transform FirePosition => _firePosition;
-
-    [SerializeField] private EObjectType _bombType;
-    public EObjectType BombType => _bombType;
-
     [SerializeField] private TrailRenderer _bulletTrail;
     [SerializeField] private GameObject _muzzleFlash;
     public GameObject MuzzleFlash => _muzzleFlash;
 
+    [Header("# Camera")]
     private Camera _mainCamera;
     public Camera MainCamera => _mainCamera;
 
@@ -28,6 +38,8 @@ public class PlayerFire : MonoBehaviour
     public static Action<int, int> OnGrandeNumberChanged;
     public static Action<float, float> OnReload;
     public static Action<float, float> OnGranadeCharge;
+    public static Action OnMeleeAttack;
+    public static Action OnWeaponChange;
 
     [Header("# Current Ammo Infos")]
     private int _currentAmmo;
@@ -54,10 +66,20 @@ public class PlayerFire : MonoBehaviour
         _mainCamera = Camera.main;
         _weaponDatas.Init(gameObject);
 
+        //// 무기 오브젝트 초기화
+        //foreach (var weaponPrefab in _weaponPrefabs)
+        //{
+        //    if (weaponPrefab.prefab != null)
+        //    {
+        //        _weaponObjects[weaponPrefab.weaponType] = weaponPrefab.prefab;
+        //    }
+        //}
+
         _strategies = new Dictionary<EWeaponType, IWeaponStrategy>
         {
             { EWeaponType.BasicGun, new BasicGunStrategy() },
-            { EWeaponType.Granade, new GranadeStrategy() }
+            { EWeaponType.Granade, new GranadeStrategy() },
+            { EWeaponType.Melee, new HammerStrategy() },
         };
 
         foreach (var strategy in _strategies)
@@ -68,6 +90,8 @@ public class PlayerFire : MonoBehaviour
         }
 
         _currentStrategy = _strategies[EWeaponType.BasicGun];
+        //_currentWeaponType = EWeaponType.BasicGun;
+        ChangeWeapon(EWeaponType.BasicGun);
 
         this.ObserveEveryValueChanged(_ => _currentAmmo)
             .DistinctUntilChanged()
@@ -112,7 +136,7 @@ public class PlayerFire : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            //근접 무기
+            ChangeWeapon(EWeaponType.Melee);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
@@ -136,10 +160,23 @@ public class PlayerFire : MonoBehaviour
     {
         if (_strategies.TryGetValue(weaponType, out var strategy))
         {
-            _currentStrategy = strategy;
+            //// 현재 무기 비활성화
+            //if (_weaponObjects.TryGetValue(_currentWeaponType, out var currentWeapon))
+            //{
+            //    currentWeapon.SetActive(false);
+            //}
 
-            // TODO: 무기 교체 애니메이션 + 실제 교체
-            Debug.Log(weaponType);
+            //// 새 무기 활성화
+            //if (_weaponObjects.TryGetValue(weaponType, out var newWeapon))
+            //{
+            //    newWeapon.SetActive(true);
+            //}
+
+            _currentStrategy = strategy;
+            //_currentWeaponType = weaponType;
+
+            OnWeaponChange?.Invoke();
+            Debug.Log($"무기 변경: {weaponType}");
         }
     }
 
@@ -148,6 +185,6 @@ public class PlayerFire : MonoBehaviour
         if (_firePosition == null || _mainCamera == null) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(_firePosition.position, _mainCamera.transform.forward * 100f);
+        Gizmos.DrawRay(MainCamera.transform.position, MainCamera.transform.forward * 10000);
     }
 }

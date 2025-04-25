@@ -11,6 +11,7 @@ public class TraceEnemy : Enemy
             { EEnemyState.Attack, new AttackState() },
             { EEnemyState.Damaged, new DamagedState() },
             { EEnemyState.Die, new DieState() },
+            { EEnemyState.KnockBack, new KnockBackState() },
         };
         StateMachine = new EnemyStateMachine(this, dict);
     }

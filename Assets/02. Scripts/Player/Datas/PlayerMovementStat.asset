@@ -24,6 +24,6 @@ MonoBehaviour:
   WallLayer:
     serializedVersion: 2
     m_Bits: 64
-  WallCheckDistance: 1
+  WallCheckDistance: 2
   ClimbSpeed: 5
   ClimbingStamina: 5

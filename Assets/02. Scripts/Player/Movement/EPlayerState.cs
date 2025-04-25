@@ -6,4 +6,5 @@ public enum EPlayerState
     Climbing,
     Jumping,
     Walking,
+    Swap,
 }

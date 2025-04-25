@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: WeaponData
   m_EditorClassIdentifier: 
   WeaponDatas:
-  - WeaponType: 0
+  - Prefab: {fileID: 0}
+    WeaponType: 0
     Damage:
       Value: 10
       KnockBackAmount: 0.5
@@ -22,7 +23,8 @@ MonoBehaviour:
     MaxAmmo: 50
     ReloadInterval: 2
     ExplodeRange: 0
-  - WeaponType: 1
+  - Prefab: {fileID: 0}
+    WeaponType: 1
     Damage:
       Value: 50
       KnockBackAmount: 1
@@ -31,3 +33,13 @@ MonoBehaviour:
     MaxAmmo: 3
     ReloadInterval: 0
     ExplodeRange: 5
+  - Prefab: {fileID: 0}
+    WeaponType: 2
+    Damage:
+      Value: 10
+      KnockBackAmount: 3
+      From: {fileID: 0}
+    CoolTime: 1
+    MaxAmmo: 0
+    ReloadInterval: 0
+    ExplodeRange: 2.5

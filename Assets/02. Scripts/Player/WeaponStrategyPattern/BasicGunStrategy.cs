@@ -19,7 +19,7 @@ public class BasicGunStrategy : IWeaponStrategy
 
     public void Fire(PlayerFire playerFire)
     {
-        if (_weaponData.CoolTime < _timer && playerFire.CurrentAmmo > 0)
+        if (_weaponData.CoolTime <= _timer && playerFire.CurrentAmmo > 0)
         {
             if (playerFire.CoReload != null)
             {
@@ -39,6 +39,7 @@ public class BasicGunStrategy : IWeaponStrategy
             bool isHit = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player")));
             if (isHit)
             {
+                Debug.Log(hitInfo.collider.name);
                 hitPoint = hitInfo.point;
                 if (hitInfo.collider.TryGetComponent<IDamageable>(out var damageable))
                 {
