@@ -4,7 +4,8 @@ public class GranadeStrategy : IWeaponStrategy
 {
     private bool _isCharging;
     private float _chargePower;
-    private float _maxChargePower = 30f;
+    private float _minChargePower = 10f;
+    private float _maxChargePower = 50f;
     private float _chargeSpeed = 10f;
     private WeaponData _weaponData;
 
@@ -49,7 +50,7 @@ public class GranadeStrategy : IWeaponStrategy
 
     public void Reload(PlayerFire playerFire)
     {
-        // 수류탄은 재장전이 없음
+        playerFire.CurrentGranade = _weaponData.MaxAmmo;
     }
 
     public void Update(PlayerFire playerFire)
@@ -64,14 +65,17 @@ public class GranadeStrategy : IWeaponStrategy
     {
         GameObject granade = CommonPoolManager.Instance.GetObject(playerFire.BombType, playerFire.FirePosition.position);
         Granade granadeComponent = granade.GetComponent<Granade>();
-        granadeComponent.SetDamage(_weaponData.Damage);
+        granadeComponent.SetDamage(_weaponData.Damage, _weaponData.ExplodeRange);
 
         Rigidbody granadeRigidbody = granadeComponent.Rigidbody;
-        granadeRigidbody.AddForce(playerFire.MainCamera.transform.forward * _chargePower, ForceMode.Impulse);
+
+        float actualPower = Mathf.Lerp(_minChargePower, _maxChargePower, _chargePower / _maxChargePower);
+        //Debug.Log($"수류탄 파워 {actualPower}");
+        granadeRigidbody.AddForce(playerFire.MainCamera.transform.forward * actualPower, ForceMode.Impulse);
         granadeRigidbody.AddTorque(Vector3.one * 10f);
 
         PlayerFire.OnGranadeCharge?.Invoke(0, _maxChargePower);
         playerFire.CurrentGranade--;
         _isCharging = false;
     }
-} 
+}

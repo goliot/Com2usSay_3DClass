@@ -14,6 +14,10 @@ public class PlayerStatSO : ScriptableObject
     public float RollSpeed = 50f;
     public float RollDuration = 0.2f;  // 대시 지속 시간
     public float RollStamina = 30f;
+
+    [Header("# Climbing")]
+    public LayerMask WallLayer;
+    public float WallCheckDistance = 1f;
     public float ClimbSpeed = 5f;
     public float ClimbingStamina = 5f;
 }

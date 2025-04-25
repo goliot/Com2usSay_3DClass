@@ -11,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     [Header("# Components")]
     private CharacterController _characterController;
     [SerializeField] private PlayerStatSO _playerStat;
+    public PlayerStatSO PlayerStat => _playerStat;
 
     [Header("# States")]
     private EPlayerState _currentState;
@@ -19,14 +20,11 @@ public class PlayerMove : MonoBehaviour
     private int _jumpCount = 0;
     private float _currentSpeed;
     private float _currentStamina;
+    public float Stamina => _currentStamina;
 
     [Header("# Climbing")]
-    [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private float wallCheckDistance = 1f;
     private bool _isClimbingWall = false;
 
-    public float Stamina => _currentStamina;
-    public PlayerStatSO PlayerStat => _playerStat;
     public static Action<float, float> OnStaminaChange;
 
     private void Awake()
@@ -66,7 +64,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 origin = transform.position + Vector3.down;
         Vector3 direction = transform.forward; // 정면 기준
 
-        return Physics.Raycast(origin, direction, wallCheckDistance, wallLayer);
+        return Physics.Raycast(origin, direction, _playerStat.WallCheckDistance, _playerStat.WallLayer);
     }
 
     private void UpdateState()
@@ -184,6 +182,6 @@ public class PlayerMove : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position + Vector3.down, transform.forward * wallCheckDistance);
+        Gizmos.DrawRay(transform.position + Vector3.down, transform.forward * _playerStat.WallCheckDistance);
     }
 }

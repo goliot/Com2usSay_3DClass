@@ -59,7 +59,7 @@ public class Barrel : MonoBehaviour, IDamageable
 
     private IEnumerator CoExplode()
     {
-        GameObject effect = CommonPoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect, transform.position);
+        GameObject effect = CommonPoolManager.Instance.GetObject(EObjectType.BarrelExplosion, transform.position);
 
         Vector3 randomDir = (Vector3.one + Random.insideUnitSphere * 0.5f).normalized;
         _rigidbody.AddForce(randomDir * _force, ForceMode.Impulse);

@@ -137,6 +137,8 @@ public class PlayerFire : MonoBehaviour
         if (_strategies.TryGetValue(weaponType, out var strategy))
         {
             _currentStrategy = strategy;
+
+            // TODO: 무기 교체 애니메이션 + 실제 교체
             Debug.Log(weaponType);
         }
     }

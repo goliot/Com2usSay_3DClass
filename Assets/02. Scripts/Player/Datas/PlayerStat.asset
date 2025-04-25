@@ -21,4 +21,9 @@ MonoBehaviour:
   RollSpeed: 50
   RollDuration: 0.2
   RollStamina: 30
+  WallLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  WallCheckDistance: 1
   ClimbSpeed: 7
+  ClimbingStamina: 5

@@ -6,5 +6,6 @@ public enum EObjectType
     BulletImpactEffect,
     TracerBullet,
     Barrel,
+    BarrelExplosion,
     Count,
 }

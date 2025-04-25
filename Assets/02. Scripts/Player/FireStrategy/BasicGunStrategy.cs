@@ -50,8 +50,7 @@ public class BasicGunStrategy : IWeaponStrategy
                 hitPoint = ray.origin + ray.direction * 50f;
             }
 
-            playerFire.StartCoroutine(CoSpawnTrail(tracerBullet.GetComponent<TrailRenderer>(), hitPoint, 
-                isHit ? (Vector3?)hitInfo.normal : null));
+            playerFire.StartCoroutine(CoSpawnTrail(tracerBullet.GetComponent<TrailRenderer>(), hitPoint, isHit ? hitInfo.normal : null));
 
             playerFire.CurrentAmmo--;
             _timer = 0f;
