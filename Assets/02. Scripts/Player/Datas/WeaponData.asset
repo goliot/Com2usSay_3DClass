@@ -17,7 +17,7 @@ MonoBehaviour:
     WeaponType: 0
     Damage:
       Value: 10
-      KnockBackAmount: 0.5
+      KnockBackAmount: 5
       From: {fileID: 0}
     CoolTime: 0.1
     MaxAmmo: 50
@@ -27,7 +27,7 @@ MonoBehaviour:
     WeaponType: 1
     Damage:
       Value: 50
-      KnockBackAmount: 1
+      KnockBackAmount: 10
       From: {fileID: 0}
     CoolTime: 1
     MaxAmmo: 3
@@ -37,7 +37,7 @@ MonoBehaviour:
     WeaponType: 2
     Damage:
       Value: 10
-      KnockBackAmount: 3
+      KnockBackAmount: 10
       From: {fileID: 0}
     CoolTime: 1
     MaxAmmo: 0
