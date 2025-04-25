@@ -6,13 +6,15 @@ public class GranadeStrategy : IWeaponStrategy
     private float _chargePower;
     private float _minChargePower = 10f;
     private float _maxChargePower = 50f;
-    private float _chargeSpeed = 10f;
+    private float _chargeDuration = 1f;
+    private float _chargeSpeed;
     private WeaponData _weaponData;
 
     public void SetWeaponData(WeaponData weaponData)
     {
         _weaponData = weaponData;
         Debug.Log($"수류탄 전략 무기 데이터 설정: {_weaponData.Damage.Value}");
+        _chargeSpeed = (_maxChargePower - _minChargePower) / _chargeDuration;
     }
 
     public WeaponData GetWeaponData()
