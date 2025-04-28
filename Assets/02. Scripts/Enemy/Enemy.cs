@@ -17,13 +17,11 @@ public class Enemy : MonoBehaviour, IDamageable
 
 
     [Header("# Components")]
-    public Rigidbody Rigidbody { get; private set; }
     public NavMeshAgent NavAgent { get; private set; }
 
     public GameObject Player { get; private set; }
     public Vector3 StartPosition { get; private set; }
     public float YVelocity { get; set; }
-
 
     [Header("# StateMachine")]
     public EnemyStateMachine StateMachine { get; protected set; }
@@ -34,25 +32,16 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        AwakeInitCommon();
         AwakeInit();
     }
 
-    private void AwakeInitCommon()
+    private void AwakeInit()
     {
-        //Rigidbody = GetComponent<Rigidbody>();
         NavAgent = GetComponent<NavMeshAgent>();
         StartPosition = transform.position;
         Stat = EnemyStats.GetData(_type);
         Stat.Damage.From = gameObject;
         NavAgent.speed = Stat.MoveSpeed;
-    }
-
-    /// <summary>
-    /// 행동 정의
-    /// </summary>
-    private void AwakeInit()
-    {
         StateMachine = new EnemyStateMachine(this, TypeState.GetStateDictionary(_type));
     }
 

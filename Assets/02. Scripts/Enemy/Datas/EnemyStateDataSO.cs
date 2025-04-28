@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "EnemyStateDataSO", menuName = "Enemy/EnemyStateDataSO")]
 public class EnemyStateDataSO : ScriptableObject
 {
-    public List<EnemyTypeStateEntry> enemyTypeStates = new List<EnemyTypeStateEntry>();
+    public List<EnemyStatePerTypeEntry> enemyTypeStates = new List<EnemyStatePerTypeEntry>();
 
     private Dictionary<EEnemyType, Dictionary<EEnemyState, IEnemyState>> _stateDictionary;
 
