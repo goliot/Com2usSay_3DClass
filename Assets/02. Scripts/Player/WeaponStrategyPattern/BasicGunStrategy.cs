@@ -26,11 +26,10 @@ public class BasicGunStrategy : IWeaponStrategy
         }
         if (_weaponData.CoolTime <= _timer && playerFire.CurrentAmmo > 0)
         {
-            if (playerFire.CoReload != null)
+            if (_coReload != null)
             {
-                playerFire.StopCoroutine(playerFire.CoReload);
-                PlayerFire.OnReload?.Invoke(_weaponData.ReloadInterval, _weaponData.ReloadInterval);
-                playerFire.CoReload = null;
+                playerFire.StopCoroutine(_coReload);
+                _coReload = null;
             }
             playerFire.MuzzleFlash.SetActive(true);
 

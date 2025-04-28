@@ -56,8 +56,6 @@ public class PlayerFire : MonoBehaviour
         set => _currentGranade = value;
     }
 
-    public Coroutine CoReload { get; set; }
-
     private IWeaponStrategy _currentStrategy;
     private Dictionary<EWeaponType, IWeaponStrategy> _strategies;
 
