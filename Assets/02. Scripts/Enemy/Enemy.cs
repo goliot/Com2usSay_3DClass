@@ -18,6 +18,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     [Header("# Components")]
     public NavMeshAgent NavAgent { get; private set; }
+    public Animator Animator;
+    public Collider Collider;
 
     public GameObject Player { get; private set; }
     public Vector3 StartPosition { get; private set; }
@@ -37,7 +39,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void AwakeInit()
     {
+        Collider = GetComponent<Collider>();
         NavAgent = GetComponent<NavMeshAgent>();
+        Animator = GetComponentInChildren<Animator>();
         StartPosition = transform.position;
         Stat = EnemyStats.GetData(_type);
         Stat.Damage.From = gameObject;
@@ -49,6 +53,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         StateMachine.ChangeState(EEnemyState.Idle);
         _health = Stat.MaxHealth;
+        Collider.enabled = true;
     }
 
     private void Start()
@@ -65,6 +70,11 @@ public class Enemy : MonoBehaviour, IDamageable
     private void ApplyGravity()
     {
         YVelocity += GRAVITY * Time.deltaTime;
+    }
+
+    public void MakeDamage()
+    {
+        Player.GetComponent<IDamageable>().TakeDamage(Stat.Damage);
     }
 
     public void TakeDamage(DamageInfo damage)

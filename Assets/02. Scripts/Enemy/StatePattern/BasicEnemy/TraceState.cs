@@ -6,6 +6,7 @@ public class TraceState : ScriptableObject, IEnemyState
 
     public void Enter(Enemy enemy)
     {
+        enemy.Animator.SetTrigger("IdleToMove");
     }
 
     public void Execute(Enemy enemy)
@@ -31,5 +32,6 @@ public class TraceState : ScriptableObject, IEnemyState
     public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
+        enemy.Animator.SetTrigger("MoveToIdle");
     }
 }

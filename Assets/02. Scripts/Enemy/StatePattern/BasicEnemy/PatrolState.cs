@@ -24,6 +24,8 @@ public class PatrolState : ScriptableObject, IEnemyState
             }
         }
         _nextPoint = _patrolPoints[0];
+
+        enemy.Animator.SetTrigger("IdleToMove");
     }
 
     public void Execute(Enemy enemy)
@@ -50,5 +52,6 @@ public class PatrolState : ScriptableObject, IEnemyState
     public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
+        enemy.Animator.SetTrigger("MoveToIdle");
     }
 }

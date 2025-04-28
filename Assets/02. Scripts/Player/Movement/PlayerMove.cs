@@ -9,6 +9,7 @@ public class PlayerMove : MonoBehaviour
     private float _yVelocity = 0f;       //중력 가속도
 
     [Header("# Components")]
+    private Animator _animator;
     private CharacterController _characterController;
     [SerializeField] private PlayerMovementStatSO _playerStat;
     public PlayerMovementStatSO PlayerStat => _playerStat;
@@ -30,6 +31,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
+        _animator = GetComponentInChildren<Animator>();
         _characterController = GetComponent<CharacterController>();
         _currentState = EPlayerState.Idle;
         _currentSpeed = _playerStat.WalkSpeed;
@@ -134,8 +136,9 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
-        direction = new Vector3(_h, 0, _v).normalized;
-        direction = Camera.main.transform.TransformDirection(direction);
+        direction = new Vector3(_h, 0, _v);
+        _animator.SetFloat("MoveAmount", direction.magnitude);
+        direction = Camera.main.transform.TransformDirection(Vector3.Normalize(direction));
 
         if (_currentState == EPlayerState.Climbing)
         {

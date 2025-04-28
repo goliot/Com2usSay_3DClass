@@ -7,13 +7,16 @@ public class Player : MonoBehaviour, IDamageable
     public PlayerStatSO Stat => _stat;
 
     private float _hp;
+    private Animator _animator;
 
     public static Action OnDamaged;
     public static Action<float, float> OnHpChanged;
 
     private void Awake()
     {
+        _animator = GetComponentInChildren<Animator>();
         _hp = _stat.MaxHp;
+        _animator.SetLayerWeight(2, _hp / _stat.MaxHp);
     }
 
     public void TakeDamage(DamageInfo damage)
@@ -26,6 +29,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             Die();
         }
+
+        _animator.SetLayerWeight(2, _hp / _stat.MaxHp);
     }
 
     private void Die()

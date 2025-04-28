@@ -5,6 +5,7 @@ public class ReturnState : ScriptableObject, IEnemyState
 {
     public void Enter(Enemy enemy)
     {
+        enemy.Animator.SetTrigger("IdleToMove");
     }
 
     public void Execute(Enemy enemy)
@@ -28,6 +29,6 @@ public class ReturnState : ScriptableObject, IEnemyState
     }
     void IEnemyState.Exit(Enemy enemy)
     {
-
+        enemy.Animator.SetTrigger("MoveToIdle");
     }
 }

@@ -7,8 +7,10 @@ public class DieState : ScriptableObject, IEnemyState
 
     public void Enter(Enemy enemy)
     {
+        enemy.Collider.enabled = false;
         _dieTimer = 0f;
         enemy.NavAgent.isStopped = true;
+        enemy.Animator.SetTrigger("Die");
     }
 
     public void Execute(Enemy enemy)
@@ -19,6 +21,7 @@ public class DieState : ScriptableObject, IEnemyState
             enemy.StateMachine.ChangeState(EEnemyState.Idle);
         }
     }
+
     public void Exit(Enemy enemy)
     {
         enemy.NavAgent.isStopped = false;

@@ -41,7 +41,7 @@ public class EnemyUIController : MonoBehaviour
 
     private void Update()
     {
-        transform.LookAt(transform.position + _camera.transform.forward);
+        _hpBar.transform.LookAt(transform.position + _camera.transform.forward);
     }
 
     private void SetHpSlider(float hp, float maxHp)

@@ -10,6 +10,7 @@ public class KnockBackState : ScriptableObject, IEnemyState
 
     public void Enter(Enemy enemy)
     {
+        enemy.Animator.SetTrigger("Hit");
         _knockBackTimer = 0f;
         // NavAgent의 velocity를 직접 조작하여 넉백 효과 생성
         enemy.NavAgent.velocity = _knockBackDirection * _knockBackForce;

@@ -21,6 +21,7 @@ public class BasicGunStrategy : IWeaponStrategy
     {
         if (_coReload != null)
         {
+            PlayerFire.OnReload?.Invoke(0, _weaponData.ReloadInterval);
             playerFire.StopCoroutine(_coReload);
             _coReload = null;
         }
@@ -59,6 +60,7 @@ public class BasicGunStrategy : IWeaponStrategy
 
             playerFire.CurrentAmmo--;
             _timer = 0f;
+            playerFire.gameObject.GetComponentInChildren<Animator>().SetTrigger("Shot");
         }
     }
 

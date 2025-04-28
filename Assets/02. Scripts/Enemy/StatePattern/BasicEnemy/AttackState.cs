@@ -7,7 +7,7 @@ public class AttackState : ScriptableObject, IEnemyState
 
     public void Enter(Enemy enemy)
     {
-        _timer = 0f;
+        _timer = enemy.Stat.AttackCoolTime;
     }
 
     public void Execute(Enemy enemy)
@@ -30,14 +30,15 @@ public class AttackState : ScriptableObject, IEnemyState
     private void PerformAttack(Enemy enemy)
     {
         Debug.Log("공격!");
-        if(enemy.Player.TryGetComponent<IDamageable>(out var damageable))
-        {
-            damageable.TakeDamage(enemy.Stat.Damage);
-        }
+        //if(enemy.Player.TryGetComponent<IDamageable>(out var damageable))
+        //{
+        //    damageable.TakeDamage(enemy.Stat.Damage);
+        //}
+        enemy.Animator.SetTrigger("IdleToAttack");
     }
 
     public void Exit(Enemy enemy)
     {
-
+        enemy.Animator.SetTrigger("AttackToIdle");
     }
 }
