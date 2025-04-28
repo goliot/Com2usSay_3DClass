@@ -41,6 +41,8 @@ public class HammerStrategy : IWeaponStrategy
                 }
             }
         }
+
+        playerFire.Animator.SetTrigger("MeleeShot");
     }
 
     public WeaponData GetWeaponData()

@@ -41,6 +41,9 @@ public class PlayerFire : MonoBehaviour
     public static Action OnMeleeAttack;
     public static Action OnWeaponChange;
 
+    [Header("# Components")]
+    public Animator Animator;
+
     [Header("# Current Ammo Infos")]
     private int _currentAmmo;
     public int CurrentAmmo
@@ -61,6 +64,7 @@ public class PlayerFire : MonoBehaviour
 
     private void Awake()
     {
+        Animator = GetComponent<Animator>();
         _mainCamera = Camera.main;
         _weaponDatas.Init(gameObject);
 

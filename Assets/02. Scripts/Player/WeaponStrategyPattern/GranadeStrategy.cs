@@ -79,5 +79,6 @@ public class GranadeStrategy : IWeaponStrategy
         PlayerFire.OnGranadeCharge?.Invoke(0, _maxChargePower);
         playerFire.CurrentGranade--;
         _isCharging = false;
+        playerFire.Animator.SetTrigger("GranadeShot");
     }
 }

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21042342a415b084fb70a29f7f4eecf5, type: 3}
   m_Name: PlayerStatSO
   m_EditorClassIdentifier: 
-  MaxHp: 1000
+  MaxHp: 200
