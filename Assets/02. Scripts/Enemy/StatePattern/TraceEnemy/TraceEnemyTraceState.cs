@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class TraceEnemyTraceState : IEnemyState
+[CreateAssetMenu(fileName = "TraceEnemyTraceState", menuName = "Enemy/States/TraceEnemyTraceState")]
+public class TraceEnemyTraceState : ScriptableObject, IEnemyState
 {
     public void Enter(Enemy enemy)
     {

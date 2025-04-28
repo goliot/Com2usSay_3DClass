@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     [Header("# StateMachine")]
     public EnemyStateMachine StateMachine { get; protected set; }
+    public EnemyStateDataSO TypeState;
 
     [Header(" Event")]
     public Action<float, float> OnHpChanged;
@@ -50,20 +51,9 @@ public class Enemy : MonoBehaviour, IDamageable
     /// <summary>
     /// 행동 정의
     /// </summary>
-    protected virtual void AwakeInit()
+    private void AwakeInit()
     {
-        Dictionary<EEnemyState, IEnemyState> dict = new Dictionary<EEnemyState, IEnemyState>
-        {
-            { EEnemyState.Idle, new IdleState() },
-            { EEnemyState.Trace, new TraceState() },
-            { EEnemyState.Return, new ReturnState() },
-            { EEnemyState.Attack, new AttackState() },
-            { EEnemyState.Damaged, new DamagedState() },
-            { EEnemyState.Die, new DieState() },
-            { EEnemyState.Patrol, new PatrolState() },
-            { EEnemyState.KnockBack, new KnockBackState() },
-        };
-        StateMachine = new EnemyStateMachine(this, dict);
+        StateMachine = new EnemyStateMachine(this, TypeState.GetStateDictionary(_type));
     }
 
     private void OnEnable()

@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class IdleState : IEnemyState
+[CreateAssetMenu(fileName = "IdleState", menuName = "Enemy/States/Idle")]
+public class IdleState : ScriptableObject, IEnemyState
 {
     private float _timer;
 
@@ -23,6 +24,7 @@ public class IdleState : IEnemyState
             return;
         }
     }
+
     public void Exit(Enemy enemy)
     {
 

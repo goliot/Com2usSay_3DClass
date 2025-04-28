@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class ReturnState : IEnemyState
+[CreateAssetMenu(fileName = "ReturnState", menuName = "Enemy/States/ReturnState")]
+public class ReturnState : ScriptableObject, IEnemyState
 {
     public void Enter(Enemy enemy)
     {

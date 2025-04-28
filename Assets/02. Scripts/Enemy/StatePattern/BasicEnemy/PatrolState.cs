@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PatrolState : IEnemyState
+[CreateAssetMenu(fileName = "PatrolState", menuName = "Enemy/States/PatrolState")]
+public class PatrolState : ScriptableObject, IEnemyState
 {
     private List<Vector3> _patrolPoints = new List<Vector3>(3);
     private Vector3 _nextPoint;

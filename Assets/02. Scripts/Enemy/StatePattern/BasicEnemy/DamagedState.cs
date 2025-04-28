@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class DamagedState : IEnemyState
+[CreateAssetMenu(fileName = "DamagedState", menuName = "Enemy/States/DamagedState")]
+public class DamagedState : ScriptableObject, IEnemyState
 {
     private float _damagedTimer;
 

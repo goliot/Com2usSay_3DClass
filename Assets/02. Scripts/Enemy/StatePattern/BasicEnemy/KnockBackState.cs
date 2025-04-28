@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class KnockBackState : IEnemyState
+[CreateAssetMenu(fileName = "KnockBackState", menuName = "Enemy/States/KnockBackState")]
+public class KnockBackState : ScriptableObject, IEnemyState
 {
     private float _knockBackTimer;
     private Vector3 _knockBackDirection;

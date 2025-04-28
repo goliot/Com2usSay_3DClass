@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class DieState : IEnemyState
+[CreateAssetMenu(fileName = "DieState", menuName = "Enemy/States/DieState")]
+public class DieState : ScriptableObject, IEnemyState
 {
     float _dieTimer;
 
