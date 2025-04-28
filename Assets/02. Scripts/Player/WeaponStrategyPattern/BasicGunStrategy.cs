@@ -19,6 +19,11 @@ public class BasicGunStrategy : IWeaponStrategy
 
     public void Fire(PlayerFire playerFire)
     {
+        if (_coReload != null)
+        {
+            playerFire.StopCoroutine(_coReload);
+            _coReload = null;
+        }
         if (_weaponData.CoolTime <= _timer && playerFire.CurrentAmmo > 0)
         {
             if (playerFire.CoReload != null)
