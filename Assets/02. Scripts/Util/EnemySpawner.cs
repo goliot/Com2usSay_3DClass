@@ -27,6 +27,6 @@ public class EnemySpawner : MonoBehaviour
     {
         Vector3 spawnPosition = _spawnPoints[Random.Range(0, _spawnPoints.Length)].position;
 
-        EnemyPoolManager.Instance.GetObject((EEnemyType)Random.Range(0, (int)EEnemyType.Count), spawnPosition);
+        GameObject enemy = EnemyPoolManager.Instance.GetObject((EEnemyType)Random.Range(0, (int)EEnemyType.Count), spawnPosition);
     }
 }

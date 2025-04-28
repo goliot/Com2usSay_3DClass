@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UIController : Singleton<UIController>
 {
     [Header("# Hp")]
-    [SerializeField] private Slider _hpSlider;
+    [SerializeField] private Slider _playerHpSlider;
 
     [Header("# Stamina")]
     [SerializeField] private Slider _staminaSlider;
@@ -73,7 +73,7 @@ public class UIController : Singleton<UIController>
 
     private void UpdateHpSlider(float curHp, float maxHp)
     {
-        _hpSlider.value = curHp / maxHp;
+        _playerHpSlider.value = curHp / maxHp;
     }
 
     private void DamageEffect()

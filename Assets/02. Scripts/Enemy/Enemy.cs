@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     [Header("# StateMachine")]
     public EnemyStateMachine StateMachine { get; protected set; }
+
+    [Header(" Event")]
+    public Action<float, float> OnHpChanged;
 
     private void Awake()
     {
@@ -93,6 +97,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         Debug.Log($"적 피격 : {damage.Value}");
         _health -= damage.Value;
+        OnHpChanged?.Invoke(_health, Stat.MaxHealth);
 
         // 넉백 상태로 전환
         Vector3 knockbackDirection = transform.position - damage.From.transform.position;
