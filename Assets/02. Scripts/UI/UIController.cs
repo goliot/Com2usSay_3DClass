@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using TMPro;
@@ -14,7 +15,6 @@ public class UIController : Singleton<UIController>
 
     [Header("# Ammo Info")]
     [SerializeField] private TextMeshProUGUI _ammoInfoText;
-    [SerializeField] private TextMeshProUGUI _granadeInfoText;
     [SerializeField] private Image _reloadProcessImage;
 
     [Header("# Damage Effect")]
@@ -25,13 +25,18 @@ public class UIController : Singleton<UIController>
 
     [Header("# Granade Charge")]
     [SerializeField] private Slider _granadeChargeSlider;
+
+    [Header("# Weapon Image")]
+    [SerializeField] private Image _weaponImage;
+    [SerializeField] private WeaponImageSO _weaponImageData;
+
     private void Awake()
     {
         PlayerMove.OnStaminaChange += UpdateStaminaSlider;
         PlayerFire.OnAmmoChanged += UpdateAmmoInfo;
-        PlayerFire.OnGrandeNumberChanged += UpdateGranadeInfo;
         PlayerFire.OnReload += UpdateReloadProcess;
         PlayerFire.OnGranadeCharge += UpdateChargeSlider;
+        PlayerFire.OnWeaponChange += UpdateWeaponImage;
         Player.OnDamaged += DamageEffect;
         Player.OnHpChanged += UpdateHpSlider;
     }
@@ -43,12 +48,7 @@ public class UIController : Singleton<UIController>
 
     private void UpdateAmmoInfo(int value, int maxValue)
     {
-        _ammoInfoText.text = $"총알 : {value} / {maxValue}";
-    }
-
-    private void UpdateGranadeInfo(int value, int maxValue)
-    {
-        _granadeInfoText.text = $"수류탄: {value} / {maxValue}";
+        _ammoInfoText.text = $"{value} / {maxValue}";
     }
 
     private void UpdateReloadProcess(float curTime, float maxTime)
@@ -74,6 +74,11 @@ public class UIController : Singleton<UIController>
     private void UpdateHpSlider(float curHp, float maxHp)
     {
         _playerHpSlider.value = curHp / maxHp;
+    }
+
+    private void UpdateWeaponImage(EWeaponType type)
+    {
+        _weaponImage.sprite = _weaponImageData.GetWeaponImageData(type).UIImage;
     }
 
     private void DamageEffect()

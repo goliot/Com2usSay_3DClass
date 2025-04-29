@@ -10,7 +10,7 @@ public class CameraRotate : MonoBehaviour
     private float _rotationX = 0f;
     private float _rotationY = 0f;
 
-    private void Update()
+    private void LateUpdate()
     {
         float mouseX = Input.GetAxis("Mouse X") * _rotationSpeed * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * _rotationSpeed * Time.deltaTime;

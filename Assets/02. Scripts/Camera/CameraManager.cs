@@ -26,7 +26,7 @@ public class CameraManager : Singleton<CameraManager>
         _cameraTransform = Camera.main.transform;
     }
 
-    void Update()
+    void LateUpdate()
     {
         HandleViewChange();
         MoveCamera();
@@ -53,7 +53,7 @@ public class CameraManager : Singleton<CameraManager>
         {
             //_cameraTransform.position = Vector3.Lerp(_cameraTransform.position, targetView.position, Time.deltaTime * TransitionSpeed);
             _cameraTransform.position = targetView.position;
-            _cameraTransform.rotation = Quaternion.Lerp(_cameraTransform.rotation, targetView.rotation, Time.deltaTime * TransitionSpeed);
+            //_cameraTransform.rotation = Quaternion.Lerp(_cameraTransform.rotation, targetView.rotation, Time.deltaTime * TransitionSpeed);
         }
         else if(_currentView == ViewMode.Quarter)
         {

@@ -21,25 +21,28 @@ MonoBehaviour:
       From: {fileID: 0}
     CoolTime: 0.1
     MaxAmmo: 50
+    CurrentAmmo: 0
     ReloadInterval: 2
     ExplodeRange: 0
   - Prefab: {fileID: 0}
     WeaponType: 1
-    Damage:
-      Value: 50
-      KnockBackAmount: 10
-      From: {fileID: 0}
-    CoolTime: 1
-    MaxAmmo: 3
-    ReloadInterval: 0
-    ExplodeRange: 5
-  - Prefab: {fileID: 0}
-    WeaponType: 2
     Damage:
       Value: 10
       KnockBackAmount: 10
       From: {fileID: 0}
     CoolTime: 1
     MaxAmmo: 0
+    CurrentAmmo: 0
     ReloadInterval: 0
     ExplodeRange: 2.5
+  - Prefab: {fileID: 0}
+    WeaponType: 2
+    Damage:
+      Value: 50
+      KnockBackAmount: 10
+      From: {fileID: 0}
+    CoolTime: 1
+    MaxAmmo: 3
+    CurrentAmmo: 0
+    ReloadInterval: 0
+    ExplodeRange: 5

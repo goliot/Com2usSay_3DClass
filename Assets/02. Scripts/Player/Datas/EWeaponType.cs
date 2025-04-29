@@ -1,7 +1,7 @@
 public enum EWeaponType
 {
-    BasicGun,
-    Granade,
+    Rifle,
     Melee,
+    Granade,
     Count,
 }

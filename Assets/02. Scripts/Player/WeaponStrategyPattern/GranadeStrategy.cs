@@ -36,7 +36,7 @@ public class GranadeStrategy : IWeaponStrategy
 
     private void StartCharging(PlayerFire playerFire)
     {
-        if (playerFire.CurrentGranade <= 0) return;
+        if (playerFire.CurrentAmmo <= 0) return;
         _isCharging = true;
         _chargePower = 0f;
     }
@@ -52,7 +52,7 @@ public class GranadeStrategy : IWeaponStrategy
 
     public void Reload(PlayerFire playerFire)
     {
-        playerFire.CurrentGranade = _weaponData.MaxAmmo;
+        playerFire.CurrentAmmo = _weaponData.MaxAmmo;
     }
 
     public void Update(PlayerFire playerFire)
@@ -77,7 +77,7 @@ public class GranadeStrategy : IWeaponStrategy
         granadeRigidbody.AddTorque(Vector3.one * 10f);
 
         PlayerFire.OnGranadeCharge?.Invoke(0, _maxChargePower);
-        playerFire.CurrentGranade--;
+        playerFire.CurrentAmmo--;
         _isCharging = false;
         playerFire.Animator.SetTrigger("GranadeShot");
     }

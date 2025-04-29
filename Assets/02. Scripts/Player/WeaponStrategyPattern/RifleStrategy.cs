@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BasicGunStrategy : IWeaponStrategy
+public class RifleStrategy : IWeaponStrategy
 {
     private float _timer;
     private Coroutine _coReload;

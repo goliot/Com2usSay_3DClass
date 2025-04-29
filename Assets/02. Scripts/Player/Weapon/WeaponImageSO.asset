@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb91a6f92c6ce044187f36487aca5236, type: 3}
+  m_Name: WeaponImageSO
+  m_EditorClassIdentifier: 
+  Datas:
+  - Type: 0
+    UIImage: {fileID: 21300000, guid: 7f6432ea80cc7ce4a89f614d9694fa4d, type: 3}
+  - Type: 1
+    UIImage: {fileID: 21300000, guid: e555fe5fd73921b40927d82cb3cef722, type: 3}
+  - Type: 2
+    UIImage: {fileID: 21300000, guid: 15548f4fa45a78548a0902074dcf64e1, type: 3}

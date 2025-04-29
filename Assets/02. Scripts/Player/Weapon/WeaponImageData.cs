@@ -1,8 +1,8 @@
-using UnityEngine.UI;
+using UnityEngine;
 
 [System.Serializable]
 public class WeaponImageData
 {
     public EWeaponType Type;
-    public Image UIImage;
+    public Sprite UIImage;
 }

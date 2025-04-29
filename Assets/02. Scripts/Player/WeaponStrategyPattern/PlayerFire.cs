@@ -4,13 +4,6 @@ using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class WeaponPrefab
-{
-    public EWeaponType weaponType;
-    public GameObject prefab;
-}
-
 public class PlayerFire : MonoBehaviour
 {
     [Header("# WeaponData")]
@@ -18,9 +11,9 @@ public class PlayerFire : MonoBehaviour
     public WeaponDataSO WeaponDatas => _weaponDatas;
 
     [Header("# WeaponObejct")]
-    //[SerializeField] private List<WeaponPrefab> _weaponPrefabs = new List<WeaponPrefab>();
-    //private Dictionary<EWeaponType, GameObject> _weaponObjects = new Dictionary<EWeaponType, GameObject>();
-    private EWeaponType _currentWeaponType = EWeaponType.BasicGun;
+    public List<WeaponObejct> _weaponPrefabs;
+    private Dictionary<EWeaponType, GameObject> _weaponObjects = new Dictionary<EWeaponType, GameObject>();
+    private EWeaponType _currentWeaponType = EWeaponType.Rifle;
 
     [Header("# Effects")]
     [SerializeField] private Transform _firePosition;
@@ -30,37 +23,29 @@ public class PlayerFire : MonoBehaviour
     public GameObject MuzzleFlash => _muzzleFlash;
 
     [Header("# Camera")]
-    private Camera _mainCamera;
-    public Camera MainCamera => _mainCamera;
+    public Camera MainCamera { get; private set; }
 
     [Header("# Events")]
     public static Action<int, int> OnAmmoChanged;
-    public static Action<int, int> OnGrandeNumberChanged;
     public static Action<float, float> OnReload;
     public static Action<float, float> OnGranadeCharge;
     public static Action OnMeleeAttack;
-    public static Action OnWeaponChange;
+    public static Action<EWeaponType> OnWeaponChange;
 
     [Header("# Zoom Aim")]
     public GameObject UI_Zoom;
+    [SerializeField] private float _zoomInSize = 15f;
+    [SerializeField] private float _zoomOutSize = 40f;
     private bool _isZoomMode = false;
 
     [Header("# Components")]
-    [NonSerialized] public Animator Animator;
+    public Animator Animator { get; private set; }
 
     [Header("# Current Ammo Infos")]
-    private int _currentAmmo;
     public int CurrentAmmo
     {
-        get => _currentAmmo;
-        set => _currentAmmo = value;
-    }
-
-    private int _currentGranade;
-    public int CurrentGranade
-    {
-        get => _currentGranade;
-        set => _currentGranade = value;
+        get => _weaponDatas.GetWeapon(_currentWeaponType).CurrentAmmo;
+        set => _weaponDatas.GetWeapon(_currentWeaponType).CurrentAmmo = value;
     }
 
     private IWeaponStrategy _currentStrategy;
@@ -69,21 +54,21 @@ public class PlayerFire : MonoBehaviour
     private void Awake()
     {
         Animator = GetComponentInChildren<Animator>();
-        _mainCamera = Camera.main;
+        MainCamera = Camera.main;
         _weaponDatas.Init(gameObject);
 
-        //// 무기 오브젝트 초기화
-        //foreach (var weaponPrefab in _weaponPrefabs)
-        //{
-        //    if (weaponPrefab.prefab != null)
-        //    {
-        //        _weaponObjects[weaponPrefab.weaponType] = weaponPrefab.prefab;
-        //    }
-        //}
+        // 무기 오브젝트 초기화
+        foreach (var weaponPrefab in _weaponPrefabs)
+        {
+            if (weaponPrefab.Prefab != null)
+            {
+                _weaponObjects[weaponPrefab.Type] = weaponPrefab.Prefab;
+            }
+        }
 
         _strategies = new Dictionary<EWeaponType, IWeaponStrategy>
         {
-            { EWeaponType.BasicGun, new BasicGunStrategy() },
+            { EWeaponType.Rifle, new RifleStrategy() },
             { EWeaponType.Granade, new GranadeStrategy() },
             { EWeaponType.Melee, new HammerStrategy() },
         };
@@ -95,22 +80,14 @@ public class PlayerFire : MonoBehaviour
             strategy.Value.SetWeaponData(weaponData);
         }
 
-        _currentStrategy = _strategies[EWeaponType.BasicGun];
-        //_currentWeaponType = EWeaponType.BasicGun;
-        ChangeWeapon(EWeaponType.BasicGun);
+        _currentStrategy = _strategies[EWeaponType.Rifle];
+        _currentWeaponType = EWeaponType.Rifle;
 
-        this.ObserveEveryValueChanged(_ => _currentAmmo)
+        this.ObserveEveryValueChanged(_ => CurrentAmmo)
             .DistinctUntilChanged()
             .Subscribe(newAmmo =>
             {
-                OnAmmoChanged?.Invoke(newAmmo, _weaponDatas.GetWeapon(EWeaponType.BasicGun).MaxAmmo);
-            }).AddTo(this);
-
-        this.ObserveEveryValueChanged(_ => _currentGranade)
-            .DistinctUntilChanged()
-            .Subscribe(newGranade =>
-            {
-                OnGrandeNumberChanged?.Invoke(newGranade, _weaponDatas.GetWeapon(EWeaponType.Granade).MaxAmmo);
+                OnAmmoChanged?.Invoke(newAmmo, _weaponDatas.GetWeapon(_currentWeaponType).MaxAmmo);
             }).AddTo(this);
     }
 
@@ -118,8 +95,8 @@ public class PlayerFire : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-        _currentAmmo = _weaponDatas.GetWeapon(EWeaponType.BasicGun).MaxAmmo;
-        _currentGranade = _weaponDatas.GetWeapon(EWeaponType.Granade).MaxAmmo;
+        ChangeWeapon(EWeaponType.Rifle);
+        CurrentAmmo = _weaponDatas.GetWeapon(_currentWeaponType).MaxAmmo;
     }
 
     private void Update()
@@ -132,28 +109,45 @@ public class PlayerFire : MonoBehaviour
 
     private void GetWeaponChangeInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
         {
-            ChangeWeapon(EWeaponType.BasicGun);
+            int weaponCount = (int)EWeaponType.Count;
+            int currentIndex = (int)_currentWeaponType;
+
+            if (scroll > 0)
+                currentIndex = (currentIndex + 1) % weaponCount;
+            else if (scroll < 0)
+                currentIndex = (currentIndex - 1 + weaponCount) % weaponCount;
+
+            ChangeWeapon((EWeaponType)currentIndex);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            ChangeWeapon(EWeaponType.Rifle);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            //보조 무기
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
             ChangeWeapon(EWeaponType.Melee);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             ChangeWeapon(EWeaponType.Granade);
         }
 
-        if(_currentStrategy is not BasicGunStrategy)
+        // 줌 모드 자동 해제
+        if (_currentStrategy is not RifleStrategy && _isZoomMode)
         {
             _isZoomMode = false;
             UI_Zoom.SetActive(false);
+            MainCamera.fieldOfView = _isZoomMode ? _zoomInSize : _zoomOutSize;
         }
+
+        // 탄약 UI 업데이트
+        WeaponData data = _weaponDatas.GetWeapon(_currentWeaponType);
+        OnAmmoChanged?.Invoke(data.CurrentAmmo, data.MaxAmmo);
+        CurrentAmmo = data.CurrentAmmo;
+        Animator.SetFloat("WeaponType", (float)(int)_currentWeaponType / ((int)EWeaponType.Count - 1));
     }
 
     private void GetFireInput()
@@ -166,10 +160,11 @@ public class PlayerFire : MonoBehaviour
         {
             _currentStrategy.Reload(this);
         }
-        else if(Input.GetMouseButtonDown(1) && _currentStrategy is BasicGunStrategy)
+        else if(Input.GetMouseButtonDown(1) && _currentStrategy is RifleStrategy)
         {
-            UI_Zoom.SetActive(false);
             _isZoomMode = !_isZoomMode;
+            UI_Zoom.SetActive(_isZoomMode);
+            MainCamera.fieldOfView = _isZoomMode ? _zoomInSize : _zoomOutSize;
         }
     }
 
@@ -177,29 +172,24 @@ public class PlayerFire : MonoBehaviour
     {
         if (_strategies.TryGetValue(weaponType, out var strategy))
         {
-            //// 현재 무기 비활성화
-            //if (_weaponObjects.TryGetValue(_currentWeaponType, out var currentWeapon))
-            //{
-            //    currentWeapon.SetActive(false);
-            //}
-
-            //// 새 무기 활성화
-            //if (_weaponObjects.TryGetValue(weaponType, out var newWeapon))
-            //{
-            //    newWeapon.SetActive(true);
-            //}
+            // 현재 무기 비활성화, 새 무기 활성화
+            if (_weaponObjects.TryGetValue(_currentWeaponType, out var currentWeapon) && _weaponObjects.TryGetValue(weaponType, out var newWeapon))
+            {
+                currentWeapon.SetActive(false);
+                newWeapon.SetActive(true);
+            }
 
             _currentStrategy = strategy;
-            //_currentWeaponType = weaponType;
+            _currentWeaponType = weaponType;
 
-            OnWeaponChange?.Invoke();
+            OnWeaponChange?.Invoke(_currentWeaponType);
             Debug.Log($"무기 변경: {weaponType}");
         }
     }
 
     private void OnDrawGizmos()
     {
-        if (_firePosition == null || _mainCamera == null) return;
+        if (_firePosition == null || MainCamera == null) return;
 
         Gizmos.color = Color.red;
         Gizmos.DrawRay(MainCamera.transform.position, MainCamera.transform.forward * 10000);

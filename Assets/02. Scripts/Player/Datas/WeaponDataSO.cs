@@ -15,6 +15,7 @@ public class WeaponDataSO : ScriptableObject
         foreach (var data in WeaponDatas)
         {
             data.Damage.From = owner;
+            data.CurrentAmmo = data.MaxAmmo;
             if (!_weaponDict.ContainsKey(data.WeaponType))
                 _weaponDict.Add(data.WeaponType, data);
         }

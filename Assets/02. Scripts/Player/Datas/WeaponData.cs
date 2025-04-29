@@ -8,6 +8,7 @@ public class WeaponData
     public DamageInfo Damage;
     public float CoolTime;
     public int MaxAmmo;
+    public int CurrentAmmo;
     public int ReloadInterval;
     public float ExplodeRange;
 }
