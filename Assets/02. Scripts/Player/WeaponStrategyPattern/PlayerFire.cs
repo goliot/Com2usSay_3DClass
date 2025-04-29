@@ -41,8 +41,12 @@ public class PlayerFire : MonoBehaviour
     public static Action OnMeleeAttack;
     public static Action OnWeaponChange;
 
+    [Header("# Zoom Aim")]
+    public GameObject UI_Zoom;
+    private bool _isZoomMode = false;
+
     [Header("# Components")]
-    public Animator Animator;
+    [NonSerialized] public Animator Animator;
 
     [Header("# Current Ammo Infos")]
     private int _currentAmmo;
@@ -64,7 +68,7 @@ public class PlayerFire : MonoBehaviour
 
     private void Awake()
     {
-        Animator = GetComponent<Animator>();
+        Animator = GetComponentInChildren<Animator>();
         _mainCamera = Camera.main;
         _weaponDatas.Init(gameObject);
 
@@ -144,6 +148,12 @@ public class PlayerFire : MonoBehaviour
         {
             ChangeWeapon(EWeaponType.Granade);
         }
+
+        if(_currentStrategy is not BasicGunStrategy)
+        {
+            _isZoomMode = false;
+            UI_Zoom.SetActive(false);
+        }
     }
 
     private void GetFireInput()
@@ -155,6 +165,11 @@ public class PlayerFire : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.R))
         {
             _currentStrategy.Reload(this);
+        }
+        else if(Input.GetMouseButtonDown(1) && _currentStrategy is BasicGunStrategy)
+        {
+            UI_Zoom.SetActive(false);
+            _isZoomMode = !_isZoomMode;
         }
     }
 

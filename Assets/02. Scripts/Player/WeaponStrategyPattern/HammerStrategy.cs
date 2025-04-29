@@ -23,7 +23,7 @@ public class HammerStrategy : IWeaponStrategy
 
     private void MeleeAttack(PlayerFire playerFire)
     {
-        Collider[] cols = Physics.OverlapSphere(playerFire.transform.position, _weaponData.ExplodeRange);
+        Collider[] cols = Physics.OverlapSphere(playerFire.transform.position, _weaponData.ExplodeRange, ~(1 << LayerMask.GetMask("Player")));
 
         foreach (var e in cols)
         {
@@ -35,7 +35,7 @@ public class HammerStrategy : IWeaponStrategy
             // viewAngle 은 부채꼴 전체 각도이기 때문에, 0.5를 곱해준다.
             if (Vector3.Angle(playerFire.transform.forward, direction) < (_attackableAngle * 0.5f))
             {
-                if (e.TryGetComponent<IDamageable>(out var damageable))
+                if (e.TryGetComponent<IDamageable>(out var damageable) && !e.TryGetComponent<Player>(out var player))
                 {
                     damageable.TakeDamage(_weaponData.Damage);
                 }
