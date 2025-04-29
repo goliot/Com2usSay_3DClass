@@ -541,11 +541,28 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &142716615 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100094, guid: eadb4ba512015ea45a1b15fb9eec5ef1, type: 3}
+  m_PrefabInstance: {fileID: 5429282136316888517}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &142716616 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400096, guid: eadb4ba512015ea45a1b15fb9eec5ef1, type: 3}
   m_PrefabInstance: {fileID: 5429282136316888517}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &142716618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142716615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7471432ac356bd0489ff26cfac9581e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &188185796
 GameObject:
   m_ObjectHideFlags: 0
@@ -2371,7 +2388,7 @@ GameObject:
   m_Component:
   - component: {fileID: 694510705}
   - component: {fileID: 694510706}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: MinimapIcon_Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2387,7 +2404,7 @@ Transform:
   m_GameObject: {fileID: 694510704}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7634,7 +7651,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 400116, guid: eadb4ba512015ea45a1b15fb9eec5ef1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3366004181291093806}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100094, guid: eadb4ba512015ea45a1b15fb9eec5ef1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 142716618}
   m_SourcePrefab: {fileID: 100100000, guid: eadb4ba512015ea45a1b15fb9eec5ef1, type: 3}
 --- !u!1 &5576767205414610443 stripped
 GameObject:

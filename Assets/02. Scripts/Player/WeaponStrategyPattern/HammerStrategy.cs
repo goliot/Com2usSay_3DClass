@@ -23,7 +23,7 @@ public class HammerStrategy : IWeaponStrategy
 
     private void MeleeAttack(PlayerFire playerFire)
     {
-        Collider[] cols = Physics.OverlapSphere(playerFire.transform.position, _weaponData.ExplodeRange, ~(1 << LayerMask.GetMask("Player")));
+        Collider[] cols = Physics.OverlapSphere(playerFire.transform.position, _weaponData.ExplodeRange);
 
         foreach (var e in cols)
         {

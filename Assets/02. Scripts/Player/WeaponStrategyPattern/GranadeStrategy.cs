@@ -9,12 +9,15 @@ public class GranadeStrategy : IWeaponStrategy
     private float _chargeDuration = 1f;
     private float _chargeSpeed;
     private WeaponData _weaponData;
+    PlayerFire _playerFire;
 
     public void SetWeaponData(WeaponData weaponData)
     {
         _weaponData = weaponData;
         Debug.Log($"수류탄 전략 무기 데이터 설정: {_weaponData.Damage.Value}");
         _chargeSpeed = (_maxChargePower - _minChargePower) / _chargeDuration;
+
+        ThrowGranadeEvent.OnThrowAction += ThrowGranade;
     }
 
     public WeaponData GetWeaponData()
@@ -59,13 +62,15 @@ public class GranadeStrategy : IWeaponStrategy
     {
         if (_isCharging && Input.GetMouseButtonUp(0))
         {
-            ThrowGranade(playerFire);
+            //ThrowGranade(playerFire);
+            _playerFire = playerFire;
+            playerFire.Animator.SetTrigger("GranadeShot");
         }
     }
 
-    private void ThrowGranade(PlayerFire playerFire)
+    public void ThrowGranade()
     {
-        GameObject granade = CommonPoolManager.Instance.GetObject(EObjectType.Granade, playerFire.FirePosition.position);
+        GameObject granade = CommonPoolManager.Instance.GetObject(EObjectType.Granade, _playerFire.FirePosition.position);
         Granade granadeComponent = granade.GetComponent<Granade>();
         granadeComponent.SetDamage(_weaponData.Damage, _weaponData.ExplodeRange);
 
@@ -73,12 +78,11 @@ public class GranadeStrategy : IWeaponStrategy
 
         float actualPower = Mathf.Lerp(_minChargePower, _maxChargePower, _chargePower / _maxChargePower);
         //Debug.Log($"수류탄 파워 {actualPower}");
-        granadeRigidbody.AddForce(playerFire.MainCamera.transform.forward * actualPower, ForceMode.Impulse);
+        granadeRigidbody.AddForce(_playerFire.MainCamera.transform.forward * actualPower, ForceMode.Impulse);
         granadeRigidbody.AddTorque(Vector3.one * 10f);
 
         PlayerFire.OnGranadeCharge?.Invoke(0, _maxChargePower);
-        playerFire.CurrentAmmo--;
+        _playerFire.CurrentAmmo--;
         _isCharging = false;
-        playerFire.Animator.SetTrigger("GranadeShot");
     }
 }

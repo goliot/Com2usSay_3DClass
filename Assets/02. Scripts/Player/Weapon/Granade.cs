@@ -29,8 +29,6 @@ public class Granade : MonoBehaviour
         _rigidbody.linearVelocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
         _rigidbody.rotation = Quaternion.identity;
-        _rigidbody.Sleep();
-        _rigidbody.WakeUp();
     }
 
     private void OnCollisionEnter(Collision collision)
