@@ -15,11 +15,13 @@ public class Enemy : MonoBehaviour, IDamageable
     public EnemyStat Stat { get; private set; }
     public float DyingTime { get; private set; } = 2f;
 
+    [Header("# Drop Item")]
+    [SerializeField] private EnemyDropItemDataSO _dropItemData;
 
     [Header("# Components")]
     public NavMeshAgent NavAgent { get; private set; }
-    public Animator Animator;
-    public Collider Collider;
+    public Animator Animator { get; private set; }
+    public Collider Collider { get; private set; }
 
     public GameObject Player { get; private set; }
     public Vector3 StartPosition { get; private set; }
@@ -106,6 +108,12 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void Die()
     {
+        EnemyDropItemEntry data = _dropItemData.GetEntry(_type);
+        for (int i = 0; i < data.Count; i++)
+        {
+            CommonPoolManager.Instance.GetObject(data.Type, transform.position);
+        }
+
         EnemyPoolManager.Instance.ReturnObject(gameObject, _type);
     }
 }

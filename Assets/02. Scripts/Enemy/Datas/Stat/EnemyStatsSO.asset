@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679d33d3292cff14bb3f5b9d6347deb3, type: 3}
+  m_Name: EnemyStatsSO
+  m_EditorClassIdentifier: 
+  EnemyStats:
+  - EnemyType: 0
+    Damage:
+      Value: 10
+      KnockBackAmount: 0
+      From: {fileID: 0}
+    MoveSpeed: 3.3
+    AttackCoolTime: 1
+    MaxHealth: 100
+    FindDistance: 7
+    AttackDistance: 2.5
+    ReturnDistance: 0.1
+    DamagedTime: 0.5
+    IdleToPatrolTime: 3
+  - EnemyType: 1
+    Damage:
+      Value: 10
+      KnockBackAmount: 0
+      From: {fileID: 0}
+    MoveSpeed: 5
+    AttackCoolTime: 1
+    MaxHealth: 100
+    FindDistance: 100
+    AttackDistance: 2.5
+    ReturnDistance: 0.1
+    DamagedTime: 0.5
+    IdleToPatrolTime: 3

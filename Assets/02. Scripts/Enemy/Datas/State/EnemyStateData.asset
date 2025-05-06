@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8095a796ec73ae044a8814e04eb2dc18, type: 3}
+  m_Name: EnemyStateData
+  m_EditorClassIdentifier: 
+  enemyTypeStates:
+  - EnemyType: 0
+    StateEntries:
+    - State: 0
+      StateLogic: {fileID: 11400000, guid: 25e2c54a2f5747a4ba9baccef4900004, type: 2}
+    - State: 1
+      StateLogic: {fileID: 11400000, guid: c9e6ca40c1230cf4cbf23196af47d844, type: 2}
+    - State: 2
+      StateLogic: {fileID: 11400000, guid: 730888b734ad87c41b14f7c51d650293, type: 2}
+    - State: 3
+      StateLogic: {fileID: 11400000, guid: 19fb0c4fe893eed4482533a66272c650, type: 2}
+    - State: 4
+      StateLogic: {fileID: 11400000, guid: 72d204e8c8cddca46b790e0752eb0053, type: 2}
+    - State: 5
+      StateLogic: {fileID: 11400000, guid: 379bfb7b75a71c144ab88d02765ed177, type: 2}
+    - State: 6
+      StateLogic: {fileID: 11400000, guid: a37fe9610c0fb7d4b912e1d28e69371f, type: 2}
+    - State: 7
+      StateLogic: {fileID: 11400000, guid: 426e4232da596654994e2018ec401e17, type: 2}
+  - EnemyType: 1
+    StateEntries:
+    - State: 0
+      StateLogic: {fileID: 11400000, guid: 25e2c54a2f5747a4ba9baccef4900004, type: 2}
+    - State: 1
+      StateLogic: {fileID: 11400000, guid: 7ea9fa4486976d14aa1446c433bc2a75, type: 2}
+    - State: 3
+      StateLogic: {fileID: 11400000, guid: 19fb0c4fe893eed4482533a66272c650, type: 2}
+    - State: 4
+      StateLogic: {fileID: 11400000, guid: 72d204e8c8cddca46b790e0752eb0053, type: 2}
+    - State: 5
+      StateLogic: {fileID: 11400000, guid: 379bfb7b75a71c144ab88d02765ed177, type: 2}
+    - State: 7
+      StateLogic: {fileID: 11400000, guid: 426e4232da596654994e2018ec401e17, type: 2}

@@ -7,5 +7,6 @@ public enum EObjectType
     TracerBullet,
     Barrel,
     BarrelExplosion,
+    Coin,
     Count,
 }

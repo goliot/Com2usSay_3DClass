@@ -553,8 +553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyStats: {fileID: 11400000, guid: 52c19a9376549f64abcffc86ae0762c1, type: 2}
   _type: 1
-  Animator: {fileID: 0}
-  Collider: {fileID: 0}
+  _dropItemData: {fileID: 11400000, guid: db1556063a200eb43ab57c78c6f199e0, type: 2}
   TypeState: {fileID: 11400000, guid: fd94c7422e7617f40937748571c3cea1, type: 2}
 --- !u!136 &7693405827364994166
 CapsuleCollider:
