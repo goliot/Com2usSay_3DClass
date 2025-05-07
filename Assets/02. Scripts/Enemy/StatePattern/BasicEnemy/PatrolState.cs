@@ -37,12 +37,15 @@ public class PatrolState : ScriptableObject, IEnemyState
             _nextPoint = _patrolPoints[Random.Range(0, _patrolPoints.Count)];
             _changePointTimer = 0;
         }
-        if(Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) <= enemy.Stat.FindDistance)
+        if(Vector3.Distance(enemy.transform.position, enemy.TargetPlayer.transform.position) <= enemy.Stat.FindDistance)
         {
             enemy.StateMachine.ChangeState(EEnemyState.Trace);
         }
 
-        enemy.NavAgent.SetDestination(_nextPoint);
+        if(enemy.NavAgent.isOnNavMesh)
+        {
+            enemy.NavAgent.SetDestination(_nextPoint);
+        }
 
         //Vector3 direction = (_nextPoint - enemy.transform.position).normalized;
         //direction.y = enemy.YVelocity;

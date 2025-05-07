@@ -11,13 +11,16 @@ public class TraceEnemyTraceState : ScriptableObject, IEnemyState
 
     public void Execute(Enemy enemy)
     {
-        if (Vector3.Distance(enemy.Player.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
+        if (Vector3.Distance(enemy.TargetPlayer.transform.position, enemy.transform.position) <= enemy.Stat.AttackDistance)
         {
             enemy.StateMachine.ChangeState(EEnemyState.Attack);
             return;
         }
 
-        enemy.NavAgent.SetDestination(enemy.Player.transform.position);
+        if (enemy.NavAgent.isOnNavMesh)
+        {
+            enemy.NavAgent.SetDestination(enemy.TargetPlayer.transform.position);
+        }
     }
 
     public void Exit(Enemy enemy)

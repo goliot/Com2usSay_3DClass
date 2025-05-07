@@ -285,7 +285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6864638791361397369}
   - component: {fileID: 8908076222814246825}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: MinimapAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -555,6 +555,8 @@ MonoBehaviour:
   _type: 1
   _dropItemData: {fileID: 11400000, guid: db1556063a200eb43ab57c78c6f199e0, type: 2}
   TypeState: {fileID: 11400000, guid: fd94c7422e7617f40937748571c3cea1, type: 2}
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.1
 --- !u!136 &7693405827364994166
 CapsuleCollider:
   m_ObjectHideFlags: 0

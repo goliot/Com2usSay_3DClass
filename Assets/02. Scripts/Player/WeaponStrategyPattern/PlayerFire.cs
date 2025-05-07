@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
+using UnityEngine.Animations.Rigging;
 
 public class PlayerFire : MonoBehaviour
 {
@@ -40,6 +41,9 @@ public class PlayerFire : MonoBehaviour
 
     [Header("# Components")]
     public Animator Animator { get; private set; }
+    public GameObject Rig;
+    private RigBuilder _rigBuilder;
+    private BoneRenderer _boneRenderer;
 
     [Header("# Current Ammo Infos")]
     public int CurrentAmmo
@@ -54,6 +58,8 @@ public class PlayerFire : MonoBehaviour
     private void Awake()
     {
         Animator = GetComponentInChildren<Animator>();
+        _rigBuilder = GetComponentInChildren<RigBuilder>();
+        _boneRenderer = GetComponentInChildren<BoneRenderer>();
         MainCamera = Camera.main;
         _weaponDatas.Init(gameObject);
 
@@ -185,6 +191,9 @@ public class PlayerFire : MonoBehaviour
             OnWeaponChange?.Invoke(_currentWeaponType);
             Debug.Log($"무기 변경: {weaponType}");
         }
+        Rig.SetActive(_currentWeaponType == EWeaponType.Rifle);
+        _rigBuilder.enabled = _currentWeaponType == EWeaponType.Rifle;
+        _boneRenderer.enabled = _currentWeaponType == EWeaponType.Rifle;
     }
 
     private void OnDrawGizmos()

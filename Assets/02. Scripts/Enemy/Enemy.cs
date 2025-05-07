@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
@@ -23,7 +22,7 @@ public class Enemy : MonoBehaviour, IDamageable
     public Animator Animator { get; private set; }
     public Collider Collider { get; private set; }
 
-    public GameObject Player { get; private set; }
+    public GameObject TargetPlayer { get; private set; }
     public Vector3 StartPosition { get; private set; }
     public float YVelocity { get; set; }
 
@@ -31,15 +30,18 @@ public class Enemy : MonoBehaviour, IDamageable
     public EnemyStateMachine StateMachine { get; protected set; }
     public EnemyStateDataSO TypeState;
 
+    [Header("# Damage Flash")]
+    private Renderer[] renderers;
+    private Color originalColor;
+    [SerializeField] private Color hitColor = Color.red;
+    [SerializeField] private float flashDuration = 0.1f;
+    private Coroutine CoFlash;
+    
+
     [Header(" Event")]
     public Action<float, float> OnHpChanged;
 
     private void Awake()
-    {
-        AwakeInit();
-    }
-
-    private void AwakeInit()
     {
         Collider = GetComponent<Collider>();
         NavAgent = GetComponent<NavMeshAgent>();
@@ -49,6 +51,9 @@ public class Enemy : MonoBehaviour, IDamageable
         Stat.Damage.From = gameObject;
         NavAgent.speed = Stat.MoveSpeed;
         StateMachine = new EnemyStateMachine(this, TypeState.GetStateDictionary(_type));
+        renderers = GetComponentsInChildren<Renderer>();
+        if (renderers.Length > 0)
+            originalColor = renderers[0].material.color;
     }
 
     private void OnEnable()
@@ -61,7 +66,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        Player = GameObject.FindGameObjectWithTag("Player");
+        TargetPlayer = Player.Instance.gameObject;
     }
 
     private void Update()
@@ -83,7 +88,7 @@ public class Enemy : MonoBehaviour, IDamageable
         }
         else
         {
-            Player.GetComponent<IDamageable>().TakeDamage(Stat.Damage);
+            TargetPlayer.GetComponent<IDamageable>().TakeDamage(Stat.Damage);
         }
     }
 
@@ -106,6 +111,7 @@ public class Enemy : MonoBehaviour, IDamageable
         var knockBackState = StateMachine.GetState(EEnemyState.KnockBack) as KnockBackState;
         knockBackState.SetKnockBackInfo(knockbackDirection, damage.KnockBackAmount);
         StateMachine.ChangeState(EEnemyState.KnockBack);
+        Flash();
 
         if (_health <= 0)
         {
@@ -140,5 +146,28 @@ public class Enemy : MonoBehaviour, IDamageable
                 damageable.TakeDamage(Stat.Damage);
             }
         }
+    }
+
+    public void Flash()
+    {
+        if(CoFlash != null)
+        {
+            StopCoroutine(CoFlash);
+            foreach (var rend in renderers)
+                rend.material.color = originalColor;
+            CoFlash = null;
+        }
+        CoFlash = StartCoroutine(FlashCoroutine());
+    }
+
+    IEnumerator FlashCoroutine()
+    {
+        foreach (var rend in renderers)
+            rend.material.color = hitColor;
+
+        yield return new WaitForSeconds(flashDuration);
+
+        foreach (var rend in renderers)
+            rend.material.color = originalColor;
     }
 }

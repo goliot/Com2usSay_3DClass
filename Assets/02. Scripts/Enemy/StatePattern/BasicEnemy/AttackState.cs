@@ -14,7 +14,7 @@ public class AttackState : ScriptableObject, IEnemyState
     {
         _timer += Time.deltaTime;
 
-        if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) >= enemy.Stat.AttackDistance)
+        if (Vector3.Distance(enemy.transform.position, enemy.TargetPlayer.transform.position) >= enemy.Stat.AttackDistance)
         {
             enemy.StateMachine.ChangeState(EEnemyState.Trace);
             return;

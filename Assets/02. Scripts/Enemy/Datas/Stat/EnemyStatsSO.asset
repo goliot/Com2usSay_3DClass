@@ -49,7 +49,7 @@ MonoBehaviour:
     MoveSpeed: 5
     AttackCoolTime: 1
     MaxHealth: 100
-    ExplodeRange: 1
+    ExplodeRange: 3
     FindDistance: 100
     AttackDistance: 2.5
     ReturnDistance: 0.1

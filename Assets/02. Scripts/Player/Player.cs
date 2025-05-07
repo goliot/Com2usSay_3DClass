@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IDamageable
+public class Player : Singleton<Player>, IDamageable
 {
     [SerializeField] public PlayerStatSO _stat;
     public PlayerStatSO Stat => _stat;

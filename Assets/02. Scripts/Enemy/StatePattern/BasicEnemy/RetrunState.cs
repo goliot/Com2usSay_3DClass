@@ -16,7 +16,7 @@ public class ReturnState : ScriptableObject, IEnemyState
             enemy.StateMachine.ChangeState(EEnemyState.Idle);
             return;
         }
-        if (Vector3.Distance(enemy.transform.position, enemy.Player.transform.position) <= enemy.Stat.FindDistance)
+        if (Vector3.Distance(enemy.transform.position, enemy.TargetPlayer.transform.position) <= enemy.Stat.FindDistance)
         {
             enemy.StateMachine.ChangeState(EEnemyState.Trace);
             return;
