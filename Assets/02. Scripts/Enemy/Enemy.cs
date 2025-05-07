@@ -77,7 +77,14 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void MakeDamage()
     {
-        Player.GetComponent<IDamageable>().TakeDamage(Stat.Damage);
+        if(_type == EEnemyType.Fat)
+        {
+            MakeRangeDamage();
+        }
+        else
+        {
+            Player.GetComponent<IDamageable>().TakeDamage(Stat.Damage);
+        }
     }
 
     public void TakeDamage(DamageInfo damage)
@@ -114,7 +121,24 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             CommonPoolManager.Instance.GetObject(data.Type, transform.position);
         }
+        if(_type == EEnemyType.Fat)
+        {
+            MakeRangeDamage();
+        }
 
         EnemyPoolManager.Instance.ReturnObject(gameObject, _type);
+    }
+
+    private void MakeRangeDamage()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, Stat.ExplodeRange, ~(1 << LayerMask.NameToLayer("Enemy")));
+
+        foreach (var hit in hits)
+        {
+            if (hit.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.TakeDamage(Stat.Damage);
+            }
+        }
     }
 }

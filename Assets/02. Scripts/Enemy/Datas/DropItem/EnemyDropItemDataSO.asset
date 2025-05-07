@@ -19,3 +19,6 @@ MonoBehaviour:
   - EnemyType: 1
     Type: 7
     Count: 10
+  - EnemyType: 2
+    Type: 7
+    Count: 15

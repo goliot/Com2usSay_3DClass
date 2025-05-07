@@ -8,6 +8,7 @@ public class EnemyStat
     public float MoveSpeed = 3.3f;
     public float AttackCoolTime = 1f;
     public float MaxHealth = 100f;
+    public float ExplodeRange = 1f;
 
     [Header("# About States")]
     public float FindDistance = 7f;

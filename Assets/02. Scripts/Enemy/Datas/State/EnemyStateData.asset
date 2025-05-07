@@ -45,3 +45,17 @@ MonoBehaviour:
       StateLogic: {fileID: 11400000, guid: 379bfb7b75a71c144ab88d02765ed177, type: 2}
     - State: 7
       StateLogic: {fileID: 11400000, guid: 426e4232da596654994e2018ec401e17, type: 2}
+  - EnemyType: 2
+    StateEntries:
+    - State: 0
+      StateLogic: {fileID: 11400000, guid: 25e2c54a2f5747a4ba9baccef4900004, type: 2}
+    - State: 1
+      StateLogic: {fileID: 11400000, guid: 7ea9fa4486976d14aa1446c433bc2a75, type: 2}
+    - State: 3
+      StateLogic: {fileID: 11400000, guid: 19fb0c4fe893eed4482533a66272c650, type: 2}
+    - State: 4
+      StateLogic: {fileID: 11400000, guid: 72d204e8c8cddca46b790e0752eb0053, type: 2}
+    - State: 5
+      StateLogic: {fileID: 11400000, guid: 379bfb7b75a71c144ab88d02765ed177, type: 2}
+    - State: 7
+      StateLogic: {fileID: 11400000, guid: 426e4232da596654994e2018ec401e17, type: 2}

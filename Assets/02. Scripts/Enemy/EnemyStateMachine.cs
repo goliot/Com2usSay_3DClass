@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class EnemyStateMachine
 {
@@ -19,6 +20,7 @@ public class EnemyStateMachine
     {
         if (StateDictionary.TryGetValue(newState, out IEnemyState state))
         {
+            Debug.Log($"{CurrentState} => {newState}");
             if (_currentState != null && _currentState != state)
             {
                 _currentState.Exit(_enemy);

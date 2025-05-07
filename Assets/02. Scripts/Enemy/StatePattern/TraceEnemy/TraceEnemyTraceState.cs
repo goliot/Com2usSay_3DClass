@@ -23,6 +23,5 @@ public class TraceEnemyTraceState : ScriptableObject, IEnemyState
     public void Exit(Enemy enemy)
     {
         enemy.NavAgent.ResetPath();
-        enemy.Animator.SetTrigger("MoveToIdle");
     }
 }

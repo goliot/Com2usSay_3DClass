@@ -21,6 +21,7 @@ MonoBehaviour:
     MoveSpeed: 3.3
     AttackCoolTime: 1
     MaxHealth: 100
+    ExplodeRange: 0
     FindDistance: 7
     AttackDistance: 2.5
     ReturnDistance: 0.1
@@ -34,6 +35,21 @@ MonoBehaviour:
     MoveSpeed: 5
     AttackCoolTime: 1
     MaxHealth: 100
+    ExplodeRange: 0
+    FindDistance: 100
+    AttackDistance: 2.5
+    ReturnDistance: 0.1
+    DamagedTime: 0.5
+    IdleToPatrolTime: 3
+  - EnemyType: 2
+    Damage:
+      Value: 100
+      KnockBackAmount: 0
+      From: {fileID: 0}
+    MoveSpeed: 5
+    AttackCoolTime: 1
+    MaxHealth: 100
+    ExplodeRange: 1
     FindDistance: 100
     AttackDistance: 2.5
     ReturnDistance: 0.1
