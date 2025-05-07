@@ -4575,7 +4575,7 @@ MonoBehaviour:
   - {fileID: 1726456122}
   - {fileID: 2035382685}
   - {fileID: 899403196}
-  _spawnCoolTime: 10
+  _spawnCoolTime: 5
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -6562,6 +6562,7 @@ MonoBehaviour:
   UI_Zoom: {fileID: 1652254117}
   _zoomInSize: 15
   _zoomOutSize: 40
+  Rig: {fileID: 1920970680}
 --- !u!1 &594897277 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5768369292148130980, guid: 6a0c2ddf39cae4648be71ce698ae5cac, type: 3}
