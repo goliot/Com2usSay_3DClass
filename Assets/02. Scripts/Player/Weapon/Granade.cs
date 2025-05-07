@@ -39,6 +39,7 @@ public class Granade : MonoBehaviour
     private void Explode()
     {
         CommonPoolManager.Instance.GetObject(EObjectType.GranadeExplodeEffect, transform.position);
+        CameraManager.Instance.ShakeCamera();
 
         Collider[] hits = Physics.OverlapSphere(transform.position, _explodeRange);
 

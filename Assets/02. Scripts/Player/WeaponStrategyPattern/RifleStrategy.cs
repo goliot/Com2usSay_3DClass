@@ -42,8 +42,10 @@ public class RifleStrategy : IWeaponStrategy
 
             Vector3 hitPoint;
             bool isHit = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player")));
+            bool isEnemy = false;
             if (isHit)
             {
+                isEnemy = hitInfo.collider.CompareTag("Enemy");
                 Debug.Log(hitInfo.collider.name);
                 hitPoint = hitInfo.point;
                 if (hitInfo.collider.TryGetComponent<IDamageable>(out var damageable))
@@ -56,7 +58,7 @@ public class RifleStrategy : IWeaponStrategy
                 hitPoint = ray.origin + ray.direction * 50f;
             }
 
-            playerFire.StartCoroutine(CoSpawnTrail(tracerBullet.GetComponent<TrailRenderer>(), hitPoint, isHit ? hitInfo.normal : null));
+            playerFire.StartCoroutine(CoSpawnTrail(tracerBullet.GetComponent<TrailRenderer>(), hitPoint, isHit ? hitInfo.normal : null, isEnemy));
 
             playerFire.CurrentAmmo--;
             _timer = 0f;
@@ -64,7 +66,7 @@ public class RifleStrategy : IWeaponStrategy
         }
     }
 
-    private IEnumerator CoSpawnTrail(TrailRenderer trail, Vector3 targetPoint, Vector3? normal)
+    private IEnumerator CoSpawnTrail(TrailRenderer trail, Vector3 targetPoint, Vector3? normal, bool isEnemy)
     {
         float time = 0;
         Vector3 startPosition = trail.transform.position;
@@ -79,7 +81,7 @@ public class RifleStrategy : IWeaponStrategy
 
         if (normal.HasValue)
         {
-            CommonPoolManager.Instance.GetObject(EObjectType.BulletImpactEffect, targetPoint, 
+            CommonPoolManager.Instance.GetObject(isEnemy ? EObjectType.ZombieHitBlood : EObjectType.BulletImpactEffect, targetPoint, 
                 Quaternion.LookRotation(normal.Value));
         }
 

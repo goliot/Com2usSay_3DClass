@@ -4,6 +4,7 @@ using UnityEngine;
 public class DieState : ScriptableObject, IEnemyState
 {
     float _dieTimer;
+    bool hasEffectActived = false;
 
     public void Enter(Enemy enemy)
     {
@@ -11,6 +12,7 @@ public class DieState : ScriptableObject, IEnemyState
         _dieTimer = 0f;
         enemy.NavAgent.isStopped = true;
         enemy.Animator.SetTrigger("Die");
+        hasEffectActived = false;
     }
 
     public void Execute(Enemy enemy)
@@ -19,6 +21,11 @@ public class DieState : ScriptableObject, IEnemyState
         if(_dieTimer >= enemy.DyingTime)
         {
             enemy.StateMachine.ChangeState(EEnemyState.Idle);
+        }
+        if (!hasEffectActived)
+        {
+            CommonPoolManager.Instance.GetObject(EObjectType.ZombieDieEffect, enemy.transform.position);
+            hasEffectActived = true;
         }
     }
 

@@ -1,5 +1,5 @@
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CameraManager : Singleton<CameraManager>
 {
@@ -14,6 +14,10 @@ public class CameraManager : Singleton<CameraManager>
     [SerializeField] private Transform _targetTransform;
     [SerializeField] private Transform _playerBody;
     private Transform _cameraTransform;
+    private Transform _targetView;
+
+    [Header("# Shake")]
+    private Tween _shakeTween;
 
     public float TransitionSpeed = 5f;
 
@@ -47,24 +51,39 @@ public class CameraManager : Singleton<CameraManager>
 
     private void MoveCamera()
     {
-        Transform targetView = GetTargetView();
+        if (_shakeTween.IsActive())
+        {
+            return;
+        }
+        _targetView = GetTargetView();
 
         if (_currentView == ViewMode.TPS)
         {
-            //_cameraTransform.position = Vector3.Lerp(_cameraTransform.position, targetView.position, Time.deltaTime * TransitionSpeed);
-            _cameraTransform.position = targetView.position;
-            //_cameraTransform.rotation = Quaternion.Lerp(_cameraTransform.rotation, targetView.rotation, Time.deltaTime * TransitionSpeed);
+            _cameraTransform.position = _targetView.position;
         }
-        else if(_currentView == ViewMode.Quarter)
+        else if (_currentView == ViewMode.Quarter)
         {
-            _cameraTransform.position = targetView.position;
-            _cameraTransform.rotation = Quaternion.Euler(45f, 0, 0f); // 예시: 위에서 바라보는 고정 각도
+            _cameraTransform.position = _targetView.position;
+            _cameraTransform.rotation = Quaternion.Euler(45f, 0, 0f);
         }
         else
         {
             // FPS 모드에서는 카메라가 플레이어의 회전을 그대로 따르도록 설정
             _cameraTransform.position = _fpsView.position;
         }
+    }
+
+    public void ShakeCamera(float duration = 0.5f, float strength = 0.5f, int vibrato = 10, float randomness = 90f)
+    {
+        if (_shakeTween != null && _shakeTween.IsActive())
+        {
+            _shakeTween.Kill();
+            _cameraTransform.position = GetTargetView().position;
+        }
+
+        _shakeTween = _cameraTransform
+            .DOShakePosition(duration, strength, vibrato, randomness, false, true)
+            .OnComplete(() => _cameraTransform.position = GetTargetView().position); // 원위치 복구
     }
 
     private Transform GetTargetView()

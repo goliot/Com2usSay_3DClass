@@ -8,5 +8,8 @@ public enum EObjectType
     Barrel,
     BarrelExplosion,
     Coin,
+    ZombieDieEffect,
+    ZombieHitBlood,
+    SkinBulletHitBlood,
     Count,
 }

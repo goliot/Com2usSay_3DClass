@@ -56,6 +56,7 @@ public class Enemy : MonoBehaviour, IDamageable
         StateMachine.ChangeState(EEnemyState.Idle);
         _health = Stat.MaxHealth;
         Collider.enabled = true;
+        OnHpChanged?.Invoke(_health, Stat.MaxHealth);
     }
 
     private void Start()
