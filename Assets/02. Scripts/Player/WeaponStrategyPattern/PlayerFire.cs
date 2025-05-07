@@ -70,7 +70,7 @@ public class PlayerFire : MonoBehaviour
         {
             { EWeaponType.Rifle, new RifleStrategy() },
             { EWeaponType.Granade, new GranadeStrategy() },
-            { EWeaponType.Melee, new HammerStrategy() },
+            { EWeaponType.Melee, new KatanaStrategy() },
         };
 
         foreach (var strategy in _strategies)
