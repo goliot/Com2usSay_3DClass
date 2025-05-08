@@ -43,7 +43,6 @@ public class Player : Singleton<Player>, IDamageable
         _animator.SetLayerWeight(1, injuredWeight);
     }
 
-
     private void Die()
     {
         Destroy(gameObject);

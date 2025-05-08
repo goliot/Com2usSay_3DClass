@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
@@ -7,10 +6,6 @@ using UnityEngine.Animations.Rigging;
 
 public class PlayerFire : MonoBehaviour
 {
-    [Header("# WeaponData")]
-    [SerializeField] private WeaponDataSO _weaponDatas;
-    public WeaponDataSO WeaponDatas => _weaponDatas;
-
     [Header("# WeaponObejct")]
     public List<WeaponObejct> _weaponPrefabs;
     private Dictionary<EWeaponType, GameObject> _weaponObjects = new Dictionary<EWeaponType, GameObject>();
@@ -48,8 +43,8 @@ public class PlayerFire : MonoBehaviour
     [Header("# Current Ammo Infos")]
     public int CurrentAmmo
     {
-        get => _weaponDatas.GetWeapon(_currentWeaponType).CurrentAmmo;
-        set => _weaponDatas.GetWeapon(_currentWeaponType).CurrentAmmo = value;
+        get => WeaponManager.Instance.GetWeaponData(_currentWeaponType).CurrentAmmo;
+        set => WeaponManager.Instance.GetWeaponData(_currentWeaponType).CurrentAmmo = value;
     }
 
     private IWeaponStrategy _currentStrategy;
@@ -61,7 +56,6 @@ public class PlayerFire : MonoBehaviour
         _rigBuilder = GetComponentInChildren<RigBuilder>();
         _boneRenderer = GetComponentInChildren<BoneRenderer>();
         MainCamera = Camera.main;
-        _weaponDatas.Init(gameObject);
 
         // 무기 오브젝트 초기화
         foreach (var weaponPrefab in _weaponPrefabs)
@@ -74,17 +68,10 @@ public class PlayerFire : MonoBehaviour
 
         _strategies = new Dictionary<EWeaponType, IWeaponStrategy>
         {
-            { EWeaponType.Rifle, new RifleStrategy() },
-            { EWeaponType.Granade, new GranadeStrategy() },
-            { EWeaponType.Melee, new KatanaStrategy() },
+            { EWeaponType.Rifle, new RifleStrategy(EWeaponType.Rifle) },
+            { EWeaponType.Granade, new GranadeStrategy(EWeaponType.Granade) },
+            { EWeaponType.Melee, new KatanaStrategy(EWeaponType.Melee) },
         };
-
-        foreach (var strategy in _strategies)
-        {
-            var weaponData = _weaponDatas.GetWeapon(strategy.Key);
-            Debug.Log($"무기 데이터 설정: {strategy.Key}, 데미지: {weaponData.Damage.Value}");
-            strategy.Value.SetWeaponData(weaponData);
-        }
 
         _currentStrategy = _strategies[EWeaponType.Rifle];
         _currentWeaponType = EWeaponType.Rifle;
@@ -93,7 +80,7 @@ public class PlayerFire : MonoBehaviour
             .DistinctUntilChanged()
             .Subscribe(newAmmo =>
             {
-                OnAmmoChanged?.Invoke(newAmmo, _weaponDatas.GetWeapon(_currentWeaponType).MaxAmmo);
+                OnAmmoChanged?.Invoke(newAmmo, WeaponManager.Instance.GetWeaponData(_currentWeaponType).MaxAmmo);
             }).AddTo(this);
     }
 
@@ -102,7 +89,7 @@ public class PlayerFire : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         ChangeWeapon(EWeaponType.Rifle);
-        CurrentAmmo = _weaponDatas.GetWeapon(_currentWeaponType).MaxAmmo;
+        CurrentAmmo = WeaponManager.Instance.GetWeaponData(_currentWeaponType).MaxAmmo;
     }
 
     private void Update()
@@ -150,10 +137,10 @@ public class PlayerFire : MonoBehaviour
         }
 
         // 탄약 UI 업데이트
-        WeaponData data = _weaponDatas.GetWeapon(_currentWeaponType);
+        WeaponData data = WeaponManager.Instance.GetWeaponData(_currentWeaponType);
         OnAmmoChanged?.Invoke(data.CurrentAmmo, data.MaxAmmo);
         CurrentAmmo = data.CurrentAmmo;
-        Animator.SetFloat("WeaponType", (float)(int)_currentWeaponType / ((int)EWeaponType.Count - 1));
+        Animator.SetFloat("WeaponType", ((int)_currentWeaponType / ((int)EWeaponType.Count - 1)));
     }
 
     private void GetFireInput()

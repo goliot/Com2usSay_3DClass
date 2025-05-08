@@ -3,13 +3,18 @@ using UnityEngine;
 public class KatanaStrategy : IWeaponStrategy
 {
     private float _timer;
-    private WeaponData _weaponData;
+    private EWeaponType _type;
 
     private float _attackableAngle = 90f;
 
+    public KatanaStrategy(EWeaponType type)
+    {
+        _type = type;
+    }
+
     public void Fire(PlayerFire playerFire)
     {
-        if(_weaponData.CoolTime <= _timer)
+        if(WeaponManager.Instance.GetWeaponData(_type).CoolTime <= _timer)
         {
             PlayerFire.OnMeleeAttack?.Invoke();
 
@@ -23,7 +28,7 @@ public class KatanaStrategy : IWeaponStrategy
 
     private void MeleeAttack(PlayerFire playerFire)
     {
-        Collider[] cols = Physics.OverlapSphere(playerFire.transform.position, _weaponData.ExplodeRange);
+        Collider[] cols = Physics.OverlapSphere(playerFire.transform.position, WeaponManager.Instance.GetWeaponData(_type).ExplodeRange);
 
         foreach (var e in cols)
         {
@@ -37,7 +42,7 @@ public class KatanaStrategy : IWeaponStrategy
             {
                 if (e.TryGetComponent<IDamageable>(out var damageable) && !e.TryGetComponent<Player>(out var player))
                 {
-                    damageable.TakeDamage(_weaponData.Damage);
+                    damageable.TakeDamage(WeaponManager.Instance.GetWeaponData(_type).Damage);
                 }
             }
         }
@@ -45,19 +50,9 @@ public class KatanaStrategy : IWeaponStrategy
         playerFire.Animator.SetTrigger("MeleeShot");
     }
 
-    public WeaponData GetWeaponData()
-    {
-        return _weaponData;
-    }
-
     public void Reload(PlayerFire playerFire)
     {
         //근접무기 재장전 없음
-    }
-
-    public void SetWeaponData(WeaponData weaponData)
-    {
-        _weaponData = weaponData;
     }
 
     public void Update(PlayerFire playerFire)

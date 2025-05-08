@@ -11,7 +11,7 @@ public class AimTarget : MonoBehaviour
     void LateUpdate()
     {
         _ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        _isHit = Physics.Raycast(_ray, out _hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player")));
+        _isHit = Physics.Raycast(_ray, out _hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player") | (1 << LayerMask.NameToLayer("MapEffect"))));
 
         if (_isHit)
         {

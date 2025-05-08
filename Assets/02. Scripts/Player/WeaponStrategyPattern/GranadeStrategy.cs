@@ -8,21 +8,14 @@ public class GranadeStrategy : IWeaponStrategy
     private float _maxChargePower = 50f;
     private float _chargeDuration = 1f;
     private float _chargeSpeed;
-    private WeaponData _weaponData;
+    private EWeaponType _type;
     PlayerFire _playerFire;
 
-    public void SetWeaponData(WeaponData weaponData)
+    public GranadeStrategy(EWeaponType type)
     {
-        _weaponData = weaponData;
-        Debug.Log($"수류탄 전략 무기 데이터 설정: {_weaponData.Damage.Value}");
+        _type = type;
         _chargeSpeed = (_maxChargePower - _minChargePower) / _chargeDuration;
-
         ThrowGranadeEvent.OnThrowAction += ThrowGranade;
-    }
-
-    public WeaponData GetWeaponData()
-    {
-        return _weaponData;
     }
 
     public void Fire(PlayerFire playerFire)
@@ -55,7 +48,7 @@ public class GranadeStrategy : IWeaponStrategy
 
     public void Reload(PlayerFire playerFire)
     {
-        playerFire.CurrentAmmo = _weaponData.MaxAmmo;
+        playerFire.CurrentAmmo = WeaponManager.Instance.GetWeaponData(_type).MaxAmmo;
     }
 
     public void Update(PlayerFire playerFire)
@@ -72,12 +65,11 @@ public class GranadeStrategy : IWeaponStrategy
     {
         GameObject granade = CommonPoolManager.Instance.GetObject(EObjectType.Granade, _playerFire.FirePosition.position);
         Granade granadeComponent = granade.GetComponent<Granade>();
-        granadeComponent.SetDamage(_weaponData.Damage, _weaponData.ExplodeRange);
+        granadeComponent.SetDamage(WeaponManager.Instance.GetWeaponData(_type).Damage, WeaponManager.Instance.GetWeaponData(_type).ExplodeRange);
 
         Rigidbody granadeRigidbody = granadeComponent.Rigidbody;
 
         float actualPower = Mathf.Lerp(_minChargePower, _maxChargePower, _chargePower / _maxChargePower);
-        //Debug.Log($"수류탄 파워 {actualPower}");
         granadeRigidbody.AddForce(_playerFire.MainCamera.transform.forward * actualPower, ForceMode.Impulse);
         granadeRigidbody.AddTorque(Vector3.one * 10f);
 

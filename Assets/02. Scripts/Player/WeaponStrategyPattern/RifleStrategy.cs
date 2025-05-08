@@ -5,27 +5,22 @@ public class RifleStrategy : IWeaponStrategy
 {
     private float _timer;
     private Coroutine _coReload;
-    private WeaponData _weaponData;
+    private EWeaponType _type;
 
-    public void SetWeaponData(WeaponData weaponData)
+    public RifleStrategy(EWeaponType type)
     {
-        _weaponData = weaponData;
-    }
-
-    public WeaponData GetWeaponData()
-    {
-        return _weaponData;
+        _type = type;
     }
 
     public void Fire(PlayerFire playerFire)
     {
         if (_coReload != null)
         {
-            PlayerFire.OnReload?.Invoke(0, _weaponData.ReloadInterval);
+            PlayerFire.OnReload?.Invoke(0, WeaponManager.Instance.GetWeaponData(_type).ReloadInterval);
             playerFire.StopCoroutine(_coReload);
             _coReload = null;
         }
-        if (_weaponData.CoolTime <= _timer && playerFire.CurrentAmmo > 0)
+        if (WeaponManager.Instance.GetWeaponData(_type).CoolTime <= _timer && WeaponManager.Instance.TryShot(WeaponManager.Instance.GetWeaponData(_type).WeaponType))
         {
             if (_coReload != null)
             {
@@ -50,7 +45,7 @@ public class RifleStrategy : IWeaponStrategy
                 hitPoint = hitInfo.point;
                 if (hitInfo.collider.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable.TakeDamage(_weaponData.Damage);
+                    damageable.TakeDamage(WeaponManager.Instance.GetWeaponData(_type).Damage);
                 }
             }
             else
@@ -60,7 +55,6 @@ public class RifleStrategy : IWeaponStrategy
 
             playerFire.StartCoroutine(CoSpawnTrail(tracerBullet.GetComponent<TrailRenderer>(), hitPoint, isHit ? hitInfo.normal : null, isEnemy));
 
-            playerFire.CurrentAmmo--;
             _timer = 0f;
             playerFire.gameObject.GetComponentInChildren<Animator>().SetTrigger("Shot");
         }
@@ -99,8 +93,8 @@ public class RifleStrategy : IWeaponStrategy
 
     private IEnumerator CoReload(PlayerFire playerFire)
     {
-        int maxAmmo = _weaponData.MaxAmmo;
-        float totalDuration = _weaponData.ReloadInterval;
+        int maxAmmo = WeaponManager.Instance.GetWeaponData(_type).MaxAmmo;
+        float totalDuration = WeaponManager.Instance.GetWeaponData(_type).ReloadInterval;
         float timer = 0f;
 
         while(timer < totalDuration)
