@@ -1,17 +1,33 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] TextMeshProUGUI _gameStartTimerText;
-    [SerializeField] GameObject _crossHair;
+    [Header("# GameState")]
+    private EGameState _gameState = EGameState.Ready;
+    public EGameState GameState => _gameState;
+
+    [Header("# GameControl")]
     [SerializeField] private float _gameStartTime;
-    private float _timer;
+
+    [Header("# UIs")]
+    [SerializeField] private TextMeshProUGUI _gameStartTimerText;
+    [SerializeField] private GameObject _crossHair;
+    [SerializeField] private GameObject _uiOptionPopup;
 
     private void Start()
     {
         StartCoroutine(CoGameStartRoutine());
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Pause();
+        }
     }
 
     IEnumerator CoGameStartRoutine()
@@ -42,4 +58,27 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 1f;
     }
 
+    private void Pause()
+    {
+        _gameState = EGameState.Pause;
+        Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+        UI_PopupManager.Instance.OpenUI(EPopupType.UIOptionPopup, closeCallback : Resume);
+    }
+
+    public void Resume()
+    {
+        _gameState = EGameState.Run;
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void Restart()
+    {
+        _gameState = EGameState.Ready;
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }

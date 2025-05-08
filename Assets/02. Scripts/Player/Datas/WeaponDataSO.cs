@@ -23,6 +23,10 @@ public class WeaponDataSO : ScriptableObject
 
     public WeaponData GetWeapon(EWeaponType type)
     {
+        if(_weaponDict == null)
+        {
+            Init(Player.Instance.gameObject);
+        }
         if (_weaponDict.TryGetValue(type, out var data))
             return data;
 

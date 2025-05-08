@@ -21,7 +21,7 @@ public class WeaponManager : Singleton<WeaponManager>
 
     public bool TryShot(EWeaponType type)
     {
-        if(GetWeaponData(type).CurrentAmmo >= 0)
+        if(GetWeaponData(type).CurrentAmmo > 0)
         {
             GetWeaponData(type).CurrentAmmo--;
             return true;
