@@ -5,7 +5,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 [Serializable]
 public struct AccountInputFields
@@ -177,7 +176,7 @@ public class UI_LoginScene : MonoBehaviour
         //TODO : 로그인 성공, 씬 로드
         SetResultText("로그인 성공!", true);
         Debug.Log(PlayerPrefs.GetString(idWithPrefix));
-        SceneManager.LoadScene(1);
+        SceneLoader.LoadSceneWithLoading("MainScene");
     }
 
     private void SetResultText(string s)
