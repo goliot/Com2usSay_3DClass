@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 73208858}
   - component: {fileID: 73208857}
   - component: {fileID: 73208856}
+  - component: {fileID: 73208859}
   m_Layer: 5
   m_Name: RegisterButton
   m_TagString: Untagged
@@ -388,6 +389,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 73208854}
   m_CullTransparentMesh: 1
+--- !u!114 &73208859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73208854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18f503224f428374cbfc9e755f4b8c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EndScale: 0.9
+  StartScale: 1
+  Duration: 0.2
 --- !u!1 &80338520
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,6 +416,7 @@ GameObject:
   - component: {fileID: 80338524}
   - component: {fileID: 80338523}
   - component: {fileID: 80338522}
+  - component: {fileID: 80338525}
   m_Layer: 5
   m_Name: ToLogInButton
   m_TagString: Untagged
@@ -521,6 +538,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 80338520}
   m_CullTransparentMesh: 1
+--- !u!114 &80338525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 80338520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18f503224f428374cbfc9e755f4b8c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EndScale: 0.9
+  StartScale: 1
+  Duration: 0.2
 --- !u!1 &110417005
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +565,7 @@ GameObject:
   - component: {fileID: 110417009}
   - component: {fileID: 110417008}
   - component: {fileID: 110417007}
+  - component: {fileID: 110417010}
   m_Layer: 5
   m_Name: LogInButton
   m_TagString: Untagged
@@ -654,6 +687,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 110417005}
   m_CullTransparentMesh: 1
+--- !u!114 &110417010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110417005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18f503224f428374cbfc9e755f4b8c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EndScale: 0.9
+  StartScale: 1
+  Duration: 0.2
 --- !u!1 &124268700
 GameObject:
   m_ObjectHideFlags: 0
@@ -4259,8 +4307,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.38
-  m_fontSizeBase: 36.38
+  m_fontSize: 55.79
+  m_fontSizeBase: 55.79
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4437,10 +4485,12 @@ MonoBehaviour:
     IDInputField: {fileID: 170514661}
     PasswordInputField: {fileID: 1071296206}
     PasswordCheck: {fileID: 0}
+    ConfirmButton: {fileID: 110417007}
   _registerFields:
     IDInputField: {fileID: 608046508}
     PasswordInputField: {fileID: 950550845}
     PasswordCheck: {fileID: 1535177967}
+    ConfirmButton: {fileID: 73208856}
 --- !u!1 &1496071934
 GameObject:
   m_ObjectHideFlags: 0
@@ -4884,6 +4934,7 @@ GameObject:
   - component: {fileID: 1693301338}
   - component: {fileID: 1693301337}
   - component: {fileID: 1693301336}
+  - component: {fileID: 1693301339}
   m_Layer: 5
   m_Name: ToRegisterButton
   m_TagString: Untagged
@@ -5005,6 +5056,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1693301334}
   m_CullTransparentMesh: 1
+--- !u!114 &1693301339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693301334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18f503224f428374cbfc9e755f4b8c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EndScale: 0.9
+  StartScale: 1
+  Duration: 0.2
 --- !u!1 &1697285908
 GameObject:
   m_ObjectHideFlags: 0

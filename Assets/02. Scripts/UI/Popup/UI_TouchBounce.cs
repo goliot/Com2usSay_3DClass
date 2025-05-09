@@ -25,4 +25,13 @@ public class UI_TouchBounce : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         transform.DOScale(StartScale, Duration).SetEase(Ease.InOutBounce).OnComplete(() => transform.localScale = Vector3.one * StartScale).SetUpdate(true);
     }
+
+    public void Bounce()
+    {
+        transform.DOKill(); // 이전 트윈 제거
+        transform.localScale = Vector3.one * StartScale;
+        transform.DOScale(EndScale, Duration)
+            .SetEase(Ease.InOutBounce)
+            .OnComplete(() => transform.DOScale(StartScale, Duration).SetEase(Ease.InOutBounce));
+    }
 }
