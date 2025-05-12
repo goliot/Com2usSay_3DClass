@@ -36,7 +36,7 @@ public class RifleStrategy : IWeaponStrategy
             RaycastHit hitInfo;
 
             Vector3 hitPoint;
-            bool isHit = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Player")));
+            bool isHit = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~((1 << LayerMask.NameToLayer("Player")) | (1 << LayerMask.NameToLayer("MapEffect"))));
             bool isEnemy = false;
             if (isHit)
             {
